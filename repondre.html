@@ -124,7 +124,7 @@ async function getAppCheckToken() {
         ]);
         const app = initializeApp({
           apiKey: FS_API_KEY,
-          authDomain: (/\.pages\.dev$/.test(location.hostname)?location.hostname:"pstat-pro-all.netlify.app"),
+          authDomain: (/\.(pages\.dev|netlify\.app)$/.test(location.hostname)?location.hostname:"pstat-pro-all.netlify.app"),
           projectId: FS_PROJECT,
           storageBucket: 'statanalyse-pro.firebasestorage.app',
           messagingSenderId: '548600157788',
