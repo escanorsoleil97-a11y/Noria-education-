@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script>(function(){var B=window.SA_NETLIFY_BASE||"https://pstat-pro-all.netlify.app";var h=location.hostname;if(/\.netlify\.app$/.test(h)||h==="localhost"||h==="127.0.0.1")return;var P="/.netlify/functions/",O=location.origin+P,f=window.fetch;window.fetch=function(u,o){try{if(typeof u==="string"){if(u.indexOf(P)===0)u=B+u;else if(u.indexOf(O)===0)u=B+u.slice(location.origin.length)}}catch(e){}return f.call(this,u,o)}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Upgrade de palier — Noria Education</title>
+<style>
+  :root{--bg:#0f172a;--surface:#1e293b;--surface2:#273548;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;--accent:#22d3ee;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px 16px;}
+  .wrap{max-width:560px;margin:0 auto;}
+  h1{font-size:1.3rem;margin:0 0 4px;}
+  p.sub{color:var(--muted);font-size:0.85rem;margin:0 0 24px;}
+  .rules{background:var(--surface2);border-radius:10px;padding:14px 16px;font-size:0.78rem;color:var(--muted);margin-bottom:22px;line-height:1.6;}
+  .rules b{color:var(--accent);}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+  .card h3{margin:0 0 4px;font-size:1.05rem;}
+  .price{font-size:1.5rem;font-weight:800;color:var(--accent);margin:8px 0;}
+  .credits{font-size:0.8rem;color:var(--muted);margin-bottom:12px;}
+  button{width:100%;padding:12px;border:none;border-radius:8px;background:var(--accent);color:#000;font-weight:700;font-size:0.9rem;cursor:pointer;}
+  button:hover{opacity:0.9;}
+  #status{text-align:center;color:var(--muted);padding:40px 0;}
+  #instructions{display:none;background:var(--surface2);border-radius:10px;padding:16px;font-size:0.85rem;line-height:1.7;}
+  .error{color:#f87171;text-align:center;padding:40px 20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🚀 Changer de palier</h1>
+  <p class="sub" id="sub-email"></p>
+  <div id="status">Chargement…</div>
+  <div id="content" style="display:none;">
+    <div class="rules">
+      📌 <b>Règles de l'upgrade</b> :<br>
+      • Votre date d'expiration reste <b>inchangée</b> (pas de bonus de durée).<br>
+      • Vous recevez le <b>stock complet</b> de chimis du nouveau palier.<br>
+      • Le prix affiché est le <b>différentiel plein</b>, sans réduction liée au calendrier.
+    </div>
+    <div id="options"></div>
+    <div id="instructions"></div>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const statusEl = document.getElementById('status');
+const contentEl = document.getElementById('content');
+const optionsEl = document.getElementById('options');
+const subEmail = document.getElementById('sub-email');
+const instrEl = document.getElementById('instructions');
+
+async function init() {
+  if (!token) { statusEl.innerHTML = '<div class="error">Lien invalide : token manquant.</div>'; return; }
+  try {
+    const resp = await fetch('/.netlify/functions/upgradeInfo?token=' + encodeURIComponent(token));
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) {
+      statusEl.innerHTML = '<div class="error">❌ ' + (data.error || 'Lien invalide.') + '</div>';
+      return;
+    }
+    statusEl.style.display = 'none';
+    contentEl.style.display = 'block';
+    subEmail.textContent = (data.email || '') + ' — palier actuel : ' + (data.currentPlan || 'gratuit');
+    if (!data.options.length) {
+      optionsEl.innerHTML = '<div class="card"><p style="color:var(--muted);margin:0;">Vous êtes déjà sur le palier le plus élevé disponible via ce lien.</p></div>';
+      return;
+    }
+    optionsEl.innerHTML = data.options.map(function(o) {
+      return '<div class="card">' +
+        '<h3>' + o.label + '</h3>' +
+        '<div class="price">' + o.prixDiff.toLocaleString('fr-FR') + ' FCFA</div>' +
+        '<div class="credits">📦 ' + o.credits.toLocaleString('fr-FR') + ' chimis inclus (stock plein)</div>' +
+        '<button onclick="choisir(\'' + o.plan + '\',\'' + o.label + '\',' + o.prixDiff + ')">Choisir ' + o.label + '</button>' +
+        '</div>';
+    }).join('');
+  } catch (e) {
+    statusEl.innerHTML = '<div class="error">❌ Erreur réseau : ' + e.message + '</div>';
+  }
+}
+
+function choisir(plan, label, prix) {
+  optionsEl.querySelectorAll('button').forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; });
+  instrEl.style.display = 'block';
+  instrEl.innerHTML =
+    '✅ Palier choisi : <b>' + label + '</b> — ' + prix.toLocaleString('fr-FR') + ' FCFA<br><br>' +
+    'Effectuez le paiement via votre moyen habituel (Mobile Money / autre), puis envoyez la confirmation à l\'administrateur avec la référence :<br>' +
+    '<code style="background:var(--surface);padding:4px 8px;border-radius:6px;display:inline-block;margin-top:6px;">' + token.substring(0,12) + '…</code><br><br>' +
+    'Votre compte sera mis à niveau dès réception du paiement.';
+}
+
+init();
+</script>
+</body>
+</html>

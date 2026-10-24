@@ -1,0 +1,214 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Profil utilisateur ---
+    // On sépare : l'utilisateur peut créer/lire son profil, mais ne peut PAS
+    // modifier les champs sensibles (credits, plan, plan_expired...) qui ne
+    // doivent être écrits que côté serveur (Admin SDK dans tes fonctions
+    // Netlify, qui n'est pas soumis à ces règles).
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == userId;
+
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        // Liste blanche : seuls ces champs, écrits par le client dans index.html
+        // (matricule auto-généré, profil déclaré au premier login, tracking
+        // d'appareils anti-fraude), peuvent être modifiés depuis le navigateur.
+        // Tout le reste (credits, plan, role, admin, weekActionLog, usageLog,
+        // questClaims, referralEarnings, etc.) ne peut être écrit que côté
+        // serveur (Admin SDK dans les fonctions Netlify), qui n'est pas soumis
+        // à ces règles. Une liste blanche protège aussi tout nouveau champ
+        // sensible ajouté plus tard : il est refusé par défaut au lieu d'être
+        // ouvert par défaut.
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['matricule', 'profil', 'recentDevices', 'lastDeviceAlertAt']);
+
+      allow delete: if false;
+    }
+
+    match /institution_requests/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+    }
+
+    // Comptes gérés par un titulaire du forfait Institution (instSaveComptes/
+    // instLoadComptes dans index.html). Le document appartient au titulaire
+    // (userId = son propre uid) ; seul lui peut lire/écrire la liste de ses
+    // comptes. Une limite de taille évite qu'un document dérive au-delà du
+    // raisonnable pour une liste de comptes.
+    match /institution_members/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.size() < 500000;
+    }
+
+    // --- Questionnaires (c'est ici que passe l'import Excel + publication) ---
+    // La construction du questionnaire (variables issues de l'import Excel)
+    // se fait côté client, mais l'écriture reste strictement encadrée :
+    // - il faut être authentifié
+    // - le document doit obligatoirement porter l'uid du créateur
+    // - les tailles restent bornées (anti-abus / anti-flood)
+    match /questionnaires/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.owner_uid == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.variables is string
+        && request.resource.data.title.size() < 500
+        && request.resource.data.variables.size() < 500000
+        // Le token admin ne doit jamais transiter par un document public
+        && !request.resource.data.keys().hasAny(['admin_token']);
+
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    // Token admin des questionnaires : jamais lisible/écrivable depuis le
+    // client. Seule la fonction Netlify (Admin SDK, qui contourne ces
+    // règles) peut lire/écrire cette collection.
+    match /questionnaire_admin/{qid} {
+      allow read, write: if false;
+    }
+
+    // --- Réponses aux questionnaires ---
+    // Création publique (un répondant anonyme n'est pas forcément connecté),
+    // mais la lecture est restreinte au propriétaire du questionnaire
+    // (owner_uid doit être copié dans chaque réponse à la création).
+    match /responses/{docId} {
+      // Les réponses sont écrites exclusivement par submitAttempt via Admin SDK.
+      // Cela empêche de contourner le compteur, le minuteur et les validations.
+      allow create: if false;
+
+      allow read: if request.auth != null
+        && resource.data.owner_uid == request.auth.uid;
+
+      allow update, delete: if false;
+    }
+
+    match /banqueEpreuves/{id} {
+      // Lecture directe fermée : les questions ne doivent jamais transiter
+      // vers le client avec leur bonne réponse. Seule qcm.js (Admin SDK,
+      // qui contourne ces règles) peut lire cette collection — l'action
+      // "list" filtre le champ "answer" avant renvoi au navigateur.
+      allow read: if false;
+      allow write: if request.auth != null
+        && request.auth.uid in [
+          '0f9FMESHK6gq5Gl77tquCETbFow1',
+          'SBATLA0GmVbeYWWpWrPoRTTveb32'
+        ];
+    }
+
+    match /epreuvesPDF/{id} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid in [
+          '0f9FMESHK6gq5Gl77tquCETbFow1',
+          'SBATLA0GmVbeYWWpWrPoRTTveb32'
+        ];
+    }
+
+    // --- Résultats étudiants ---
+    // On force l'uid du document créé à correspondre à l'utilisateur connecté,
+    // pour empêcher qu'un étudiant crée un résultat au nom de quelqu'un d'autre.
+    match /etudiantResultats/{id} {
+      // Écriture fermée : le score/correction sont désormais calculés et
+      // enregistrés exclusivement par qcm.js (action "submit", Admin SDK),
+      // qui contourne ces règles. Un client ne peut plus s'auto-attribuer
+      // un score en écrivant directement le document.
+      allow create: if false;
+      allow read: if request.auth != null
+        && request.auth.uid == resource.data.uid;
+      allow update, delete: if false;
+    }
+
+    match /history/{docId} {
+      allow read: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+    }
+
+    match /etablissements/{id} {
+      allow read, write: if request.auth != null
+        && request.auth.uid in [
+          '0f9FMESHK6gq5Gl77tquCETbFow1',
+          'SBATLA0GmVbeYWWpWrPoRTTveb32'
+        ];
+    }
+
+    // --- Module Ambassadeurs ---
+    // Toute écriture (candidature, validation, tracking clic/signup,
+    // commissions, confirmation de paiement) passe exclusivement par les
+    // fonctions Netlify (Admin SDK, qui contourne ces règles). Un
+    // ambassadeur peut lire sa propre fiche pour son dashboard.
+    match /ambassadors/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+    match /ambassador_events/{id} {
+      allow read, write: if false;
+    }
+    match /ambassador_commissions/{id} {
+      allow read: if request.auth != null
+        && resource.data.ambassador_id == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Config globale (ex : ambassadorRecruitment, chimiBudget) — lecture/écriture
+    // uniquement via les fonctions Netlify (Admin SDK).
+    match /config/{id} {
+      allow read, write: if false;
+    }
+
+    // --- Infos officielles (onglet "Infos") ---
+    // Publication/suppression réservées à growth.js (Admin SDK, admin uniquement).
+    // La lecture publique passe aussi par growth.js (action listInfos), jamais
+    // directement en Firestore côté client — on refuse donc tout accès direct.
+    match /infoPosts/{id} {
+      allow read, write: if false;
+    }
+
+    // --- Ledger unifié des chimis distribués (quêtes, parrainage, liens admin) ---
+    // Écrit uniquement par les fonctions Netlify (Admin SDK) à des fins d'audit.
+    // Jamais lu ni écrit directement par le client.
+    match /chimi_ledger/{id} {
+      allow read, write: if false;
+    }
+
+    // Notifications ambassadeur (ex : "commission versée") — lues via
+    // l'endpoint serveur, jamais directement en Firestore.
+    match /ambassador_notifications/{id} {
+      allow read, write: if false;
+    }
+
+    match /_spi_logs/{id} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+    }
+
+    // --- Gestion commerciale ---
+    // Toutes les données CRM/ventes/stock/factures sont manipulées par les
+    // fonctions Netlify avec Firebase Admin. Aucun accès Firestore direct
+    // depuis le navigateur n'est autorisé.
+    match /commercial/{uid}/{section}/{docId} {
+      allow read, write: if false;
+    }
+
+    // --- Pharmacie ---
+    // Données pharmacie écrites/lues uniquement par les fonctions Netlify.
+    match /pharmacy/{uid}/{section}/{docId} {
+      allow read, write: if false;
+    }
+
+    match /savedDatabases/{id} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
