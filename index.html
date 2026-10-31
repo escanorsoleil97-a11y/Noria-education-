@@ -14,6 +14,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style id="ai-structured-render-style">
 .ai-figure-wrap{width:100%;overflow:auto;margin:10px 0}.ai-figure-wrap svg{display:block;max-width:100%;height:auto;margin:auto}.ai-md-p{margin:0 0 8px;line-height:1.55;white-space:normal}.ai-spacer{height:6px}.ai-md-heading{color:var(--accent);margin:14px 0 7px;line-height:1.25}.ai-md-list{margin:6px 0 10px;padding-left:24px;line-height:1.55}.ai-md-list li{margin:3px 0}.ai-md-quote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(34,211,238,.08);border-radius:0 8px 8px 0}.ai-table-wrap{width:100%;overflow-x:auto;margin:10px 0 14px;border:1px solid var(--border);border-radius:9px}.ai-markdown-table{width:100%;min-width:460px;border-collapse:collapse;background:var(--surface);font-size:.78rem;line-height:1.35}.ai-markdown-table th{background:rgba(34,211,238,.16);color:var(--text);font-weight:800;text-align:left;padding:9px 10px;border-bottom:2px solid var(--accent)}.ai-markdown-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}.ai-markdown-table tr:last-child td{border-bottom:0}.ai-markdown-table tr:nth-child(even) td{background:rgba(255,255,255,.025)}.ai-code{overflow:auto;margin:10px 0;padding:10px;border-radius:8px;background:#101827;color:#dbeafe;font-size:.75rem;white-space:pre-wrap}.ai-code code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.ai-md-p code{padding:1px 4px;border-radius:4px;background:rgba(148,163,184,.2)}
+
+/* ===== NORIA STATISTIQUE : identité visuelle et parcours analytique ===== */
+#authOverlay{background:radial-gradient(circle at 15% 10%,rgba(14,165,233,.18),transparent 32%),radial-gradient(circle at 90% 85%,rgba(16,185,129,.16),transparent 30%),#071322!important;padding:22px;box-sizing:border-box}
+#authCard{background:linear-gradient(160deg,#10243a,#0b192a)!important;border:1px solid rgba(148,190,220,.22)!important;border-radius:24px!important;padding:30px!important;max-width:460px!important;box-shadow:0 28px 90px rgba(0,0,0,.42)!important;color:#e7f1fb!important}
+#authCard>div:first-of-type{margin-bottom:22px!important}
+#authCard>div:first-of-type>div{color:#f1f7ff!important;font-size:2rem!important;letter-spacing:-1.2px}
+#authCard>div:first-of-type p{color:#a9bfd2!important;line-height:1.5}
+#authCard input,#authCard select{background:#081728!important;border:1px solid #29445e!important;color:#eef7ff!important;border-radius:11px!important;min-height:44px;box-sizing:border-box}
+#authCard input:focus,#authCard select:focus{border-color:#20c997!important;box-shadow:0 0 0 3px rgba(32,201,151,.12);}
+#authCard label{color:#c0d1e0!important}
+#authCard #inAppBrowserWarning{color:#fcd58b!important}
+#authCard #authErrorMsg{color:#fecaca!important}
+#authCard #tabLoginBtn,#authCard #tabRegisterBtn{border-radius:9px!important;padding:10px!important}
+#authSubmitBtn{background:linear-gradient(120deg,#20c997,#0ea5a4)!important;color:#06251f!important;border-radius:11px!important;box-shadow:0 8px 24px rgba(16,185,129,.18)}
+#authCard #googleAuthBtnWrap>button{border:1px solid #cbd5e1!important;border-radius:11px!important}
+#authCard p{color:#9eb2c6!important}
+.noria-analysis-flow{display:none;position:sticky;top:0;z-index:80;margin:0 0 16px;padding:12px 14px;background:rgba(9,24,40,.96);border:1px solid rgba(100,150,180,.22);border-radius:14px;backdrop-filter:blur(14px);box-shadow:0 8px 28px rgba(0,0,0,.14)}
+.noria-analysis-flow.visible{display:block}
+.noria-flow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;flex-wrap:wrap}
+.noria-flow-title{font-weight:800;color:var(--text);font-size:.9rem;letter-spacing:.1px}
+.noria-flow-sub{font-size:.72rem;color:var(--muted)}
+.noria-flow-steps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.noria-flow-step{border:1px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:10px;padding:9px 5px;text-align:center;cursor:pointer;font:inherit;min-width:0;transition:.18s}
+.noria-flow-step:hover{border-color:var(--accent);color:var(--text);transform:translateY(-1px)}
+.noria-flow-step.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent);font-weight:800}
+.noria-flow-step .ico{display:block;font-size:1.12rem;margin-bottom:3px}
+.noria-flow-step .lbl{display:block;font-size:.68rem;white-space:normal;line-height:1.2}
+.noria-flow-note{font-size:.72rem;color:var(--muted);margin-top:9px;line-height:1.45}
+.noria-flow-note strong{color:var(--text)}
+@media(max-width:720px){.noria-analysis-flow{padding:10px;margin-bottom:12px}.noria-flow-steps{grid-template-columns:repeat(4,minmax(0,1fr))}.noria-flow-step{padding:8px 3px}.noria-flow-step .lbl{font-size:.64rem}#authCard{padding:24px 20px!important}}
+
 </style>
 <style id="commercial-dashboard-polish">
 .commercial-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end;margin-bottom:12px}
@@ -7417,7 +7448,7 @@ body.sa-float-on .main-content{padding-bottom:92px!important}
  install();
 })();
 </script>
-<div id="sa-guide" role="dialog" aria-modal="true" aria-label="Guide Noria Éducation"><div class="sa-guide-box"><div class="sa-guide-head"><b>📖 Guide Noria Éducation</b><span><a href="/guide_noria_education.pdf" target="_blank" rel="noopener">👁 Voir le PDF</a><a class="sa-pdf-dl" href="/guide_noria_education.pdf" download="Guide_Noria_Education.pdf">⬇ Télécharger</a><button type="button" onclick="saGuideClose()" aria-label="Fermer">✕</button></span></div><div class="sa-guide-body"><p class="sa-g-intro">Apprendre, analyser, décider — le guide pratique pour étudiants, enseignants et établissements.</p><details><summary>1 · Vue d’ensemble</summary><p>Noria Éducation relie apprentissage de la méthode, analyses statistiques, collecte, rédaction assistée et pilotage métier. La qualité de la décision dépend des données, du protocole et de la validation humaine.</p><ul><li><b>Labo statistique</b> : import Excel/CSV, descriptif, croisements, régression, méthodes avancées.</li><li><b>Rédaction</b> : protocole, mémoire, discussion, conclusion.</li><li><b>Collecte &amp; réponses</b> : questionnaires et suivi.</li><li><b>Coach Étudiant</b> : QCM, épreuves, aide, progression.</li><li><b>Modes métier</b> : commerce, santé, école, hôpital (sur activation).</li></ul></details><details><summary>2 · Démarrer</summary><p>Connexion par e-mail (mot de passe de 6 caractères minimum) ou Google. Le compte démarre en forfait gratuit avec un crédit de départ. Commencez avec un jeu d’essai non sensible et consultez l’écran Tarifs avant tout engagement.</p></details><details><summary>3 · Conduire une analyse</summary><ol><li>Labo Statistique → <b>Importer un fichier</b> (.xlsx, .xls, .csv).</li><li>Contrôlez l’aperçu : en-têtes, types, effectif, valeurs manquantes.</li><li>Définissez Y (à expliquer) et X (explicatives).</li><li>Descriptif d’abord, puis croisements, puis modèle.</li><li>Exportez (Word, Excel, PowerPoint) et relisez.</li></ol></details><details><summary>4 · Préparer une base</summary><ul><li>Une ligne = une observation ; une colonne = une variable.</li><li>Identifiants non nominatifs (E001, E002…).</li><li>Libellés homogènes (F/M partout) ; cellule vide ≠ 0.</li><li>Pas de cellules fusionnées ; gardez une copie brute intacte.</li><li>Import incohérent : corrigez le fichier avant tout modèle.</li></ul></details><details><summary>5 · Lire les résultats</summary><ul><li>Lire l’estimation et son unité, pas seulement la valeur p.</li><li>Distinguer significativité, importance pratique et causalité.</li><li>Indiquer effectif analysé, exclusions, méthode, incertitude.</li><li>Comparaisons multiples : risque de faux positifs.</li></ul></details><details><summary>6 · IA académique</summary><p>L’IA est un assistant, pas un auteur : fournissez des résultats déjà vérifiés, vérifiez chaque chiffre et chaque référence (auteurs, revue, DOI), respectez la politique de votre établissement, ne saisissez aucune donnée identifiante.</p></details><details><summary>7 · Collecte &amp; questionnaires</summary><p>Objectif → questionnaire → test du lien sur un autre appareil → publication → suivi et export. Formulations simples, consignes claires, information des répondants sur la finalité et l’usage des données.</p></details><details><summary>8 · Enseignants</summary><p>Séquence : cadrer, préparer un jeu anonymisé, faire pratiquer, évaluer l’interprétation (pas seulement le clic), rétroagir. Ne décidez jamais seul sur un score automatique.</p></details><details><summary>9 · Établissements &amp; sécurité</summary><p>Pilotez d’abord un service ou une classe. Un compte nominatif par personne, moindre privilège, revue trimestrielle des accès privilégiés. Données minimales et pseudonymisées jusqu’à validation du responsable sécurité ; analyse de risque dédiée pour santé, élèves ou mineurs.</p></details><details><summary>10 · Dépannage</summary><p>Connexion refusée : vérifier e-mail/mot de passe, sinon réinitialiser. Import rejeté : tester un échantillon avec le modèle fourni. Export vide : recharger et vérifier les filtres. Au support, indiquez module, heure, navigateur et étapes, sans donnée sensible.</p></details><p class="sa-g-note">Document d’orientation : ni audit de sécurité, ni avis juridique, ni validation statistique.</p></div></div></div>
+<div id="sa-guide" role="dialog" aria-modal="true" aria-label="Guide Noria Statistique"><div class="sa-guide-box"><div class="sa-guide-head"><b>📖 Guide Noria Statistique</b><span><a href="/guide_noria_education.pdf" target="_blank" rel="noopener">👁 Voir le PDF</a><a class="sa-pdf-dl" href="/guide_noria_education.pdf" download="Guide_Noria_Education.pdf">⬇ Télécharger</a><button type="button" onclick="saGuideClose()" aria-label="Fermer">✕</button></span></div><div class="sa-guide-body"><p class="sa-g-intro">Importer, analyser, interpréter et documenter — le guide pratique de Noria Statistique.</p><details><summary>1 · Vue d’ensemble</summary><p>Noria Statistique relie apprentissage de la méthode, analyses statistiques, collecte, rédaction assistée et pilotage métier. La qualité de la décision dépend des données, du protocole et de la validation humaine.</p><ul><li><b>Labo statistique</b> : import Excel/CSV, descriptif, croisements, régression, méthodes avancées.</li><li><b>Rédaction</b> : protocole, mémoire, discussion, conclusion.</li><li><b>Collecte &amp; réponses</b> : questionnaires et suivi.</li><li><b>Coach Étudiant</b> : QCM, épreuves, aide, progression.</li><li><b>Modes métier</b> : commerce, santé, école, hôpital (sur activation).</li></ul></details><details><summary>2 · Démarrer</summary><p>Connexion par e-mail (mot de passe de 6 caractères minimum) ou Google. Le compte démarre en forfait gratuit avec un crédit de départ. Commencez avec un jeu d’essai non sensible et consultez l’écran Tarifs avant tout engagement.</p></details><details><summary>3 · Conduire une analyse</summary><ol><li>Labo Statistique → <b>Importer un fichier</b> (.xlsx, .xls, .csv).</li><li>Contrôlez l’aperçu : en-têtes, types, effectif, valeurs manquantes.</li><li>Définissez Y (à expliquer) et X (explicatives).</li><li>Descriptif d’abord, puis croisements, puis modèle.</li><li>Exportez (Word, Excel, PowerPoint) et relisez.</li></ol></details><details><summary>4 · Préparer une base</summary><ul><li>Une ligne = une observation ; une colonne = une variable.</li><li>Identifiants non nominatifs (E001, E002…).</li><li>Libellés homogènes (F/M partout) ; cellule vide ≠ 0.</li><li>Pas de cellules fusionnées ; gardez une copie brute intacte.</li><li>Import incohérent : corrigez le fichier avant tout modèle.</li></ul></details><details><summary>5 · Lire les résultats</summary><ul><li>Lire l’estimation et son unité, pas seulement la valeur p.</li><li>Distinguer significativité, importance pratique et causalité.</li><li>Indiquer effectif analysé, exclusions, méthode, incertitude.</li><li>Comparaisons multiples : risque de faux positifs.</li></ul></details><details><summary>6 · IA académique</summary><p>L’IA est un assistant, pas un auteur : fournissez des résultats déjà vérifiés, vérifiez chaque chiffre et chaque référence (auteurs, revue, DOI), respectez la politique de votre établissement, ne saisissez aucune donnée identifiante.</p></details><details><summary>7 · Collecte &amp; questionnaires</summary><p>Objectif → questionnaire → test du lien sur un autre appareil → publication → suivi et export. Formulations simples, consignes claires, information des répondants sur la finalité et l’usage des données.</p></details><details><summary>8 · Enseignants</summary><p>Séquence : cadrer, préparer un jeu anonymisé, faire pratiquer, évaluer l’interprétation (pas seulement le clic), rétroagir. Ne décidez jamais seul sur un score automatique.</p></details><details><summary>9 · Établissements &amp; sécurité</summary><p>Pilotez d’abord un service ou une classe. Un compte nominatif par personne, moindre privilège, revue trimestrielle des accès privilégiés. Données minimales et pseudonymisées jusqu’à validation du responsable sécurité ; analyse de risque dédiée pour santé, élèves ou mineurs.</p></details><details><summary>10 · Dépannage</summary><p>Connexion refusée : vérifier e-mail/mot de passe, sinon réinitialiser. Import rejeté : tester un échantillon avec le modèle fourni. Export vide : recharger et vérifier les filtres. Au support, indiquez module, heure, navigateur et étapes, sans donnée sensible.</p></details><p class="sa-g-note">Document d’orientation : ni audit de sécurité, ni avis juridique, ni validation statistique.</p></div></div></div>
 <style id="sa-guide-css">
 #sa-guide-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:960;border:0;border-radius:999px;padding:12px 16px;background:var(--accent);color:#04120c;font:700 .85rem system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);cursor:pointer}
 @media(max-width:600px){#sa-guide-fab span{display:none}#sa-guide-fab{padding:14px}}
@@ -7452,6 +7483,117 @@ document.getElementById('sa-guide').addEventListener('click',function(e){if(e.ta
 @media(prefers-reduced-motion:reduce){#sa-guide-fab,#sa-guide-fab::after{animation:none}}
 /* Bouton PDF dans la fenêtre du guide */
 .sa-guide-head .sa-pdf-dl{display:inline-block;padding:6px 10px;border-radius:8px;background:var(--accent);color:#04120c!important;font-weight:800}
+</style>
+
+<script>
+/* Parcours d'analyse continu : les moteurs d'origine et les contrôles d'accès restent inchangés. */
+(function(){
+  const steps=[
+    {id:'data',icon:'📥',label:'Importer'},
+    {id:'desc',icon:'📊',label:'Descriptif'},
+    {id:'cross',icon:'🔬',label:'Bivarié'},
+    {id:'regression',icon:'📈',label:'Régression'},
+    {id:'advanced',icon:'🧪',label:'Avancé'},
+    {id:'discussion',icon:'🧠',label:'Interpréter'},
+    {id:'excel',icon:'📑',label:'Rapports'}
+  ];
+  function addFlow(){
+    const main=document.querySelector('.main-content');
+    if(!main||document.getElementById('noriaAnalysisFlow'))return;
+    const bar=document.createElement('section');bar.id='noriaAnalysisFlow';bar.className='noria-analysis-flow';bar.setAttribute('aria-label',"Parcours d'analyse statistique");
+    bar.innerHTML='<div class="noria-flow-head"><div><div class="noria-flow-title">Noria · Parcours d’analyse</div><div class="noria-flow-sub">Un seul chemin de travail, de l’importation aux résultats</div></div><div class="noria-flow-sub" id="noriaFlowDataset">Importez une base pour commencer</div></div><div class="noria-flow-steps">'+steps.map(x=>'<button type="button" class="noria-flow-step" data-step="'+x.id+'"><span class="ico">'+x.icon+'</span><span class="lbl">'+x.label+'</span></button>').join('')+'</div><div class="noria-flow-note"><strong>Choix statistique raisonné :</strong> les analyses proposées doivent tenir compte du type des variables, de l’objectif, des effectifs et des conditions d’application. Noria ne lance pas un test inférentiel sans ces vérifications.</div>';
+    const header=main.querySelector('header');if(header)header.insertAdjacentElement('afterend',bar);else main.prepend(bar);
+    bar.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{if(typeof window.showTab==='function')window.showTab(b.dataset.step)}));
+  }
+  function updateFlow(id){
+    const bar=document.getElementById('noriaAnalysisFlow');if(!bar)return;
+    const active=steps.some(x=>x.id===id);bar.classList.toggle('visible',active);
+    bar.querySelectorAll('[data-step]').forEach(b=>b.classList.toggle('active',b.dataset.step===id));
+    const ds=document.getElementById('noriaFlowDataset');if(ds){const n=(typeof DATA!=='undefined'&&Array.isArray(DATA))?DATA.length:0,c=(typeof COLS!=='undefined'&&Array.isArray(COLS))?COLS.length:0;ds.textContent=n?`${n.toLocaleString('fr-FR')} observations · ${c} variables`:'Importez une base pour commencer'}
+  }
+  function install(){
+    addFlow();
+    if(typeof window.showTab==='function'&&!window.showTab.__noriaWrapped){const original=window.showTab;const wrapped=function(id,el){const out=original.apply(this,arguments);updateFlow(id);return out};wrapped.__noriaWrapped=true;window.showTab=wrapped}
+    if(typeof window.initDataUI==='function'&&!window.initDataUI.__noriaWrapped){const originalInit=window.initDataUI;const wrappedInit=function(){const out=originalInit.apply(this,arguments);setTimeout(()=>{const ds=document.getElementById('noriaFlowDataset');if(ds)ds.textContent=((typeof DATA!=='undefined'&&Array.isArray(DATA))?DATA.length:0).toLocaleString('fr-FR')+' observations · '+((typeof COLS!=='undefined'&&Array.isArray(COLS))?COLS.length:0)+' variables'},0);return out};wrappedInit.__noriaWrapped=true;window.initDataUI=wrappedInit}
+    updateFlow('hub');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+  window.addEventListener('load',install);
+})();
+</script>
+
+
+<script id="noria-method-assistant-v3-script">
+/* Assistant méthodologique non destructif : recommandations uniquement, aucun test n'est lancé sans action de l'utilisateur. */
+(function(){
+ const escText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function ensurePanel(){
+  const preview=document.getElementById('previewArea');
+  if(!preview||document.getElementById('noriaMethodAssistant'))return;
+  const panel=document.createElement('section');panel.id='noriaMethodAssistant';
+  panel.innerHTML=`<div class="nma-head"><div><div class="nma-title">🧭 Assistant méthodologique</div><div class="nma-sub">Choisissez votre objectif et les variables. Noria propose une méthode candidate à vérifier avant l’analyse.</div></div><span class="nma-tag">Aide à la décision</span></div>
+  <div class="nma-grid"><div><label for="nmaObjective">Objectif de l’analyse</label><select id="nmaObjective"><option value="compare">Comparer des groupes</option><option value="association">Étudier une association entre variables</option><option value="predict">Expliquer / prédire un résultat</option></select></div>
+  <div><label for="nmaY">Variable résultat (Y)</label><select id="nmaY"></select></div>
+  <div><label for="nmaX">Variable explicative / groupe (X)</label><select id="nmaX"></select></div>
+  <div><label for="nmaDesign">Plan d’étude</label><select id="nmaDesign"><option value="independent">Groupes indépendants</option><option value="paired">Mesures appariées (avant/après, mêmes sujets)</option></select></div></div>
+  <div id="nmaResult" class="nma-result" aria-live="polite">Importez une base et sélectionnez les variables pour obtenir une recommandation.</div>`;
+  preview.appendChild(panel);
+  ['nmaObjective','nmaY','nmaX','nmaDesign'].forEach(id=>panel.querySelector('#'+id).addEventListener('change',recommend));
+ }
+ function getData(){try{return {data:typeof DATA!=='undefined'?DATA:[],cols:typeof COLS!=='undefined'?COLS:[]}}catch(e){return {data:[],cols:[]}}}
+ function fillSelects(){const {cols}=getData();const y=document.getElementById('nmaY'),x=document.getElementById('nmaX');if(!y||!x)return;const oldY=y.value,oldX=x.value;const opts=cols.map(c=>`<option value="${escText(c.name)}">${escText(c.name)} (${c.type==='num'?'quantitative':'qualitative'})</option>`).join('');y.innerHTML=opts;x.innerHTML=opts;if(cols.some(c=>c.name===oldY))y.value=oldY;if(cols.some(c=>c.name===oldX))x.value=oldX;if(cols.length>1&&y.value===x.value)x.selectedIndex=1;recommend();}
+ function recommend(){
+  const {data,cols}=getData();const out=document.getElementById('nmaResult');if(!out)return;
+  const yName=document.getElementById('nmaY')?.value,xName=document.getElementById('nmaX')?.value,obj=document.getElementById('nmaObjective')?.value,design=document.getElementById('nmaDesign')?.value;
+  if(!data.length||cols.length<2){out.textContent='La base doit contenir au moins deux variables et des observations.';return}
+  if(!yName||!xName||yName===xName){out.textContent='Sélectionnez deux variables différentes.';return}
+  const y=cols.find(c=>c.name===yName),x=cols.find(c=>c.name===xName);const valid=data.filter(r=>r[yName]!==null&&r[yName]!==undefined&&String(r[yName]).trim()!==''&&r[xName]!==null&&r[xName]!==undefined&&String(r[xName]).trim()!=='');
+  const levels=new Set(valid.map(r=>String(r[xName]))).size;const n=valid.length;let title='',detail='',checks=[];
+  if(obj==='compare'&&y.type==='num'&&x.type==='cat'){
+   if(design==='paired'){title='Comparaison appariée : test t apparié ou Wilcoxon signé-rang';detail='À envisager pour une mesure quantitative répétée chez les mêmes sujets. Le test t apparié suppose une distribution raisonnable des différences ; sinon, Wilcoxon peut être plus adapté.'}
+   else if(levels===2){title='Comparaison de deux groupes : test t indépendant ou Mann–Whitney';detail='Le test t compare les moyennes si ses conditions sont acceptables ; Mann–Whitney est une alternative non paramétrique, à interpréter selon la forme des distributions.'}
+   else{title='Comparaison de plusieurs groupes : ANOVA ou Kruskal–Wallis';detail='ANOVA si les résidus et variances sont suffisamment compatibles avec ses hypothèses ; sinon Kruskal–Wallis peut être envisagé. Prévoir une procédure post-hoc adaptée si le test global est concluant.'}
+  }else if(obj==='compare'&&y.type==='cat'&&x.type==='num'){
+   title='Comparer une variable quantitative selon les catégories du résultat';detail='Inversez le rôle des variables si votre question scientifique porte sur la moyenne de X selon les groupes Y. Choisissez ensuite t/ANOVA ou leurs alternatives selon le nombre de groupes et les hypothèses.'
+  }else if((obj==='association'||obj==='compare')&&y.type==='cat'&&x.type==='cat'){
+   title='Association entre deux variables qualitatives : Chi-deux ou test exact de Fisher';detail='Le Chi-deux nécessite des effectifs théoriques suffisants. Si le tableau est 2×2 avec petits effectifs, le test exact de Fisher est souvent préférable.'
+  }else if(obj==='association'&&y.type==='num'&&x.type==='num'){
+   title='Association entre deux variables quantitatives : corrélation de Pearson ou Spearman';detail='Pearson évalue une association linéaire avec conditions adaptées ; Spearman évalue une association monotone et est moins sensible aux valeurs extrêmes.'
+  }else if(obj==='predict'&&y.type==='num'){
+   title='Modèle de régression linéaire (à confirmer)';detail='Adapté à un résultat quantitatif. Vérifier la linéarité, les résidus, l’homoscédasticité, l’indépendance, la colinéarité et les observations influentes.'
+  }else if(obj==='predict'&&y.type==='cat'){
+   title='Modèle de régression logistique (à confirmer)';detail='Adapté à un résultat qualitatif binaire ; pour plus de deux catégories, envisager une logistique multinomiale ou ordinale selon l’échelle. Vérifier le codage, les effectifs par modalité et la stabilité du modèle.'
+  }else{title='Clarifier l’objectif et le rôle des variables';detail='Le couple de types sélectionné ne suffit pas à déterminer un test. Précisez si vous cherchez une comparaison, une association ou une prédiction.'}
+  checks.push(`Effectif complet pour ces deux variables : ${n} sur ${data.length}.`);
+  checks.push(`Nombre de modalités de X : ${levels}.`);
+  if(n<30)checks.push('Effectif faible : interprétation prudente et examen des conditions indispensable.');
+  if(levels<2)checks.push('X ne présente qu’une modalité dans les données complètes : comparaison impossible.');
+  if(n===0)checks.push('Aucune observation complète pour ce couple de variables.');
+  out.innerHTML=`<div><span class="nma-tag">Recommandation indicative</span><b>${escText(title)}</b></div><p>${escText(detail)}</p><ul>${checks.map(c=>'<li>'+escText(c)+'</li>').join('')}</ul><div class="nma-warn"><b>Avant de lancer le test :</b> vérifier le protocole, l’indépendance ou l’appariement, les valeurs manquantes, les distributions, les effectifs attendus, les hypothèses et le plan d’échantillonnage. Cette aide ne remplace pas une validation statistique et ne lance aucun calcul.</div>`;
+ }
+ function refresh(){ensurePanel();fillSelects()}
+ const install=()=>{
+  refresh();
+  if(typeof window.initDataUI==='function'&&!window.initDataUI.__nmaV3){const old=window.initDataUI;const wrapped=function(){const r=old.apply(this,arguments);setTimeout(refresh,0);return r};wrapped.__nmaV3=true;window.initDataUI=wrapped}
+  if(typeof window.rouvrirBaseDonnees==='function'&&!window.rouvrirBaseDonnees.__nmaV3){const old=window.rouvrirBaseDonnees;const wrapped=async function(){const r=await old.apply(this,arguments);setTimeout(refresh,0);return r};wrapped.__nmaV3=true;window.rouvrirBaseDonnees=wrapped}
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();window.addEventListener('load',install);
+})();
+</script>
+
+<style id="noria-method-assistant-v3">
+#noriaMethodAssistant{margin-top:14px;border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--surface)}
+#noriaMethodAssistant .nma-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+#noriaMethodAssistant .nma-title{font-weight:800;font-size:1rem;color:var(--text)}
+#noriaMethodAssistant .nma-sub{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5}
+#noriaMethodAssistant .nma-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#noriaMethodAssistant label{display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:5px}
+#noriaMethodAssistant select{width:100%;min-width:0;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--text)}
+#noriaMethodAssistant .nma-result{margin-top:12px;padding:12px;border-radius:10px;background:var(--surface2);font-size:.82rem;line-height:1.55;color:var(--text)}
+#noriaMethodAssistant .nma-result ul{padding-left:18px;margin:7px 0}
+#noriaMethodAssistant .nma-tag{display:inline-block;padding:3px 8px;border-radius:20px;background:var(--accent-glow);color:var(--accent);font-size:.7rem;font-weight:800;margin:2px 4px 2px 0}
+#noriaMethodAssistant .nma-warn{margin-top:9px;padding:9px 10px;border-left:3px solid #f59e0b;background:rgba(245,158,11,.08);border-radius:0 8px 8px 0;color:var(--text)}
+@media(max-width:620px){#noriaMethodAssistant .nma-grid{grid-template-columns:1fr}}
 </style>
 </body>
 </html>
