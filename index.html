@@ -10,6 +10,27 @@
 -->
 <html lang="fr">
 <head>
+<script>
+/* Noria API bridge: le frontend Pages utilise les fonctions hébergées sur Netlify. */
+(function(){
+  var API_ORIGIN = "https://noria-education.netlify.app";
+  var nativeFetch = window.fetch.bind(window);
+  window.fetch = function(input, init){
+    try {
+      var raw = (typeof input === "string" || input instanceof URL) ? String(input) : (input && input.url);
+      if (raw) {
+        var u = new URL(raw, window.location.href);
+        if (u.origin === window.location.origin && u.pathname.indexOf("/.netlify/functions/") === 0) {
+          u = new URL(u.pathname + u.search + u.hash, API_ORIGIN);
+          if (typeof input === "string" || input instanceof URL) input = u.toString();
+          else input = new Request(u.toString(), input);
+        }
+      }
+    } catch (e) { console.warn("Noria API routing:", e); }
+    return nativeFetch(input, init);
+  };
+})();
+</script>
 <meta charset="UTF-8"><title>Noria Statistique | Analyse & collecte de données</title><meta name="sa-auth-fix" content="2026-08-16-redirect-all">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style id="ai-structured-render-style">
@@ -44,6 +65,36 @@
 .noria-flow-note{font-size:.72rem;color:var(--muted);margin-top:9px;line-height:1.45}
 .noria-flow-note strong{color:var(--text)}
 @media(max-width:720px){.noria-analysis-flow{padding:10px;margin-bottom:12px}.noria-flow-steps{grid-template-columns:repeat(4,minmax(0,1fr))}.noria-flow-step{padding:8px 3px}.noria-flow-step .lbl{font-size:.64rem}#authCard{padding:24px 20px!important}}
+
+
+/* Noria Statistique — écran d'accueil inspiré de la composition LumiStreaming.
+   Les identifiants et éléments du formulaire existant restent inchangés. */
+#authOverlay{justify-content:flex-end!important;align-items:center!important;overflow-y:auto!important;padding:28px clamp(18px,4vw,64px)!important;gap:24px!important}
+#noriaAuthVisual{position:absolute;inset:0 auto 0 0;width:56%;min-height:100%;padding:clamp(28px,5vw,76px);display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;overflow:hidden;background:radial-gradient(ellipse at 12% 82%,rgba(45,212,191,.13),transparent 42%),linear-gradient(145deg,rgba(11,31,49,.4),rgba(5,17,30,.08));}
+#noriaAuthVisual:after{content:"";position:absolute;width:430px;height:430px;border:1px solid rgba(96,165,250,.13);border-radius:50%;right:-170px;top:-210px;box-shadow:0 0 0 38px rgba(96,165,250,.025),0 0 0 82px rgba(96,165,250,.02);pointer-events:none}
+.noria-auth-brand{display:flex;align-items:center;gap:12px;color:#eaf5ff;font-weight:800;letter-spacing:2px;font-size:.86rem;position:relative;z-index:1}
+.noria-auth-brand b{color:#2dd4bf}
+.noria-brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#2dd4bf,#168c9b);color:#06251f;font-size:1.25rem;font-weight:900;box-shadow:0 8px 24px rgba(45,212,191,.2)}
+.noria-auth-copy{max-width:650px;position:relative;z-index:1;margin:28px 0}
+.noria-auth-kicker{font-size:.68rem;letter-spacing:2px;color:#8ba9bd;font-weight:800;margin-bottom:22px}
+.noria-auth-kicker span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2dd4bf;margin-right:8px;box-shadow:0 0 12px #2dd4bf}
+.noria-auth-copy h1{font-size:clamp(2rem,3.7vw,3.5rem);line-height:1.12;letter-spacing:-1.8px;color:#f2f8ff;margin:0 0 18px;font-weight:850}
+.noria-auth-copy h1 em{font-style:normal;color:#2dd4bf}
+.noria-auth-copy>p{max-width:490px;color:#a7bfd0;font-size:1rem;line-height:1.75;margin:0 0 28px}
+.noria-auth-visual-card{max-width:520px;border:1px solid rgba(125,170,200,.2);background:linear-gradient(145deg,rgba(16,39,59,.88),rgba(8,25,41,.82));border-radius:18px;padding:18px 20px 14px;box-shadow:0 20px 70px rgba(0,0,0,.2);backdrop-filter:blur(10px)}
+.noria-visual-head{display:flex;justify-content:space-between;align-items:center;color:#8ba9bd;font-size:.62rem;font-weight:800;letter-spacing:1.4px}
+.noria-live-dot{color:#5eead4;font-size:.58rem;letter-spacing:.8px}
+.noria-auth-visual-card svg{display:block;width:100%;height:auto;margin:10px 0 0}
+.noria-visual-stats{display:flex;gap:28px;border-top:1px solid rgba(125,170,200,.14);padding-top:12px}
+.noria-visual-stats div{display:flex;flex-direction:column;gap:2px}.noria-visual-stats strong{color:#e8f7ff;font-size:1rem}.noria-visual-stats span{color:#829eb3;font-size:.68rem}
+.noria-auth-foot{position:relative;z-index:1;color:#66859b;font-size:.72rem;letter-spacing:.3px}
+#authCard{position:relative;z-index:2;flex:0 1 460px;width:min(460px,43vw)!important;max-width:460px!important;margin:0 1vw 0 0!important;max-height:calc(100vh - 36px);overflow-y:auto;scrollbar-width:thin}
+#authLoading{position:relative;z-index:3}
+#authLoading>div:nth-child(2){color:#eaf5ff!important}
+#authCard #inAppBrowserWarning{color:#fcd58b!important}
+#authCard #googleAuthBtnWrap>button{background:rgba(255,255,255,.96)!important;color:#172b3b!important}
+@media(max-width:850px){#authOverlay{justify-content:center!important;align-items:flex-start!important;padding:170px 14px 18px!important}#noriaAuthVisual{width:100%;height:190px;min-height:190px;padding:18px 20px;justify-content:flex-start;background:linear-gradient(145deg,rgba(11,31,49,.72),rgba(5,17,30,.15))}.noria-auth-brand{font-size:.72rem}.noria-brand-mark{width:32px;height:32px}.noria-auth-copy{margin:15px 0 0}.noria-auth-kicker{font-size:.56rem;margin-bottom:7px}.noria-auth-copy h1{font-size:1.35rem;line-height:1.15;letter-spacing:-.5px;margin-bottom:5px}.noria-auth-copy>p{font-size:.72rem;line-height:1.35;margin:0;max-width:430px}.noria-auth-visual-card,.noria-auth-foot{display:none}#authCard{width:100%!important;max-width:480px!important;flex:0 1 auto;margin:0!important;max-height:none;padding:23px 20px!important}}
+@media(max-height:700px) and (min-width:851px){#noriaAuthVisual{padding-top:22px;padding-bottom:22px}.noria-auth-copy{margin:12px 0}.noria-auth-copy h1{font-size:2.15rem}.noria-auth-visual-card{padding:10px 14px}.noria-auth-visual-card svg{max-height:130px}}
 
 </style>
 <style id="commercial-dashboard-polish">
@@ -1071,6 +1122,27 @@ em, i {
     <div style="width:40px;height:40px;border:3px solid rgba(16,185,129,0.2);border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
     <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#0f172a;">Noria<span style="color:#10b981"> Statistique</span></div>
     <div style="color:#64748b;font-size:0.78rem;margin-top:6px;">Vérification de la session…</div>
+  </div>
+  <div id="noriaAuthVisual" aria-hidden="true">
+    <div class="noria-auth-brand"><span class="noria-brand-mark">N</span><span>NORIA <b>STATISTIQUE</b></span></div>
+    <div class="noria-auth-copy">
+      <div class="noria-auth-kicker"><span></span> DONNÉES · ANALYSE · RECHERCHE</div>
+      <h1>Transformez vos données<br><em>en décisions éclairées.</em></h1>
+      <p>Un espace de travail pour collecter, analyser et valoriser vos données scientifiques et professionnelles.</p>
+      <div class="noria-auth-visual-card">
+        <div class="noria-visual-head"><span>APERÇU ANALYTIQUE</span><span class="noria-live-dot">● EN DIRECT</span></div>
+        <svg viewBox="0 0 520 190" role="presentation" focusable="false">
+          <defs><linearGradient id="noriaLineGrad" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#60a5fa"/></linearGradient><linearGradient id="noriaAreaGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2dd4bf" stop-opacity=".28"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></linearGradient></defs>
+          <g stroke="#29445b" stroke-width="1"><path d="M28 28H500M28 68H500M28 108H500M28 148H500"/><path d="M28 18V158M146 18V158M264 18V158M382 18V158M500 18V158" opacity=".45"/></g>
+          <path d="M28 132 C65 124 82 139 112 112 S166 116 198 88 S249 102 278 74 S331 91 361 55 S420 68 448 37 S481 49 500 24 L500 158 L28 158Z" fill="url(#noriaAreaGrad)"/>
+          <path d="M28 132 C65 124 82 139 112 112 S166 116 198 88 S249 102 278 74 S331 91 361 55 S420 68 448 37 S481 49 500 24" fill="none" stroke="url(#noriaLineGrad)" stroke-width="4" stroke-linecap="round"/>
+          <g fill="#2dd4bf" stroke="#0d2032" stroke-width="3"><circle cx="112" cy="112" r="5"/><circle cx="198" cy="88" r="5"/><circle cx="278" cy="74" r="5"/><circle cx="361" cy="55" r="5"/><circle cx="448" cy="37" r="5"/></g>
+          <g fill="#7f9bb2" font-size="10"><text x="28" y="178">S1</text><text x="146" y="178">S2</text><text x="264" y="178">S3</text><text x="382" y="178">S4</text><text x="486" y="178">S5</text></g>
+        </svg>
+        <div class="noria-visual-stats"><div><strong>01</strong><span>Collecter</span></div><div><strong>02</strong><span>Analyser</span></div><div><strong>03</strong><span>Interpréter</span></div></div>
+      </div>
+    </div>
+    <div class="noria-auth-foot">Une plateforme pensée pour la rigueur scientifique.</div>
   </div>
   <div id="authCard" style="display:none;background:#ffffff;border:1px solid #334155;border-radius:18px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
     <div id="inAppBrowserWarning" style="display:none;background:rgba(245,158,11,0.15);border:1px solid #f59e0b;border-radius:10px;padding:12px 14px;margin-bottom:20px;font-size:0.8rem;color:#fbbf24;line-height:1.5;">

@@ -8,7 +8,7 @@ function allowedOrigins(){
   const netlify=[process.env.URL,process.env.DEPLOY_PRIME_URL,process.env.DEPLOY_URL]
     .map(s=>String(s||'').trim().replace(/\/$/,''))
     .filter(s=>/^https:\/\//i.test(s));
-  return [...new Set([...configured,...netlify])];
+  return [...new Set([...configured,'https://noria-education.pages.dev',...netlify])];
 }
 function originOf(event){return event.headers?.origin || event.headers?.Origin || ''}
 function assertOrigin(event){

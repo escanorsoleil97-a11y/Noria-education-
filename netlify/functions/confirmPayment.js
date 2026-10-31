@@ -102,7 +102,7 @@ async function triggerReferralBonus(uid, plan) {
 
 exports.handler = async (event) => {
   const _origin = (event.headers && (event.headers.origin || event.headers.Origin)) || '';
-  const _allowed = (process.env.SITE_ORIGIN || process.env.URL || 'https://pstat-pro-all.netlify.app,https://stat-analyse-pro.netlify.app','https://pstat-pro-all.netlify.app').split(',').map(s=>s.trim().replace(/\/$/,'')).filter(Boolean);
+  const _allowed = [...(process.env.SITE_ORIGIN || '').split(','), process.env.URL || '', process.env.DEPLOY_URL || '', 'https://noria-education.pages.dev', 'https://noria-education.netlify.app'].map(s=>s.trim().replace(/\/$/,'')).filter(Boolean);
   if (_origin && !_allowed.includes(_origin) && !(process.env.URL||'').startsWith(_origin) && !(process.env.DEPLOY_URL||'').startsWith(_origin)) {
     return { statusCode: 403, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Origine non autorisée' }) };
   }
