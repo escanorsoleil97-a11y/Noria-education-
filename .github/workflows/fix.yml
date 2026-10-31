@@ -1,3 +1,4 @@
+
 name: fix
 
 on:
@@ -15,20 +16,20 @@ jobs:
 
       - name: Deploy Noria Statistique
         run: |
-          set -e
+          set -eux
+
+          ZIP="NoriaStat.zip"
+
+          if [ ! -f "$ZIP" ]; then
+            echo "ERREUR : NoriaStat.zip absent de la racine du dépôt"
+            ls -la
+            exit 1
+          fi
 
           mkdir -p /tmp/x
+          unzip -q "$ZIP" -d /tmp/x
 
-          test -f Noria_Statistique_refonte.zip
-
-          cp Noria_Statistique_refonte.zip /tmp/x/
-
-          cd /tmp/x
-          unzip -q Noria_Statistique_refonte.zip
-
-          test -d Noria_Education
-
-          cd "$GITHUB_WORKSPACE"
+          test -f /tmp/x/Noria_Education/index.html
 
           find . -mindepth 1 -maxdepth 1 \
             ! -name .git \
