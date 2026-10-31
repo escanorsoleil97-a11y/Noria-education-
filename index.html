@@ -10,7 +10,7 @@
 -->
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><title>Noria Statistique — Analyse & collecte de données</title><meta name="sa-auth-fix" content="2026-08-16-redirect-all">
+<meta charset="UTF-8"><title>Noria Statistique | Analyse & collecte de données</title><meta name="sa-auth-fix" content="2026-08-16-redirect-all">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style id="ai-structured-render-style">
 .ai-figure-wrap{width:100%;overflow:auto;margin:10px 0}.ai-figure-wrap svg{display:block;max-width:100%;height:auto;margin:auto}.ai-md-p{margin:0 0 8px;line-height:1.55;white-space:normal}.ai-spacer{height:6px}.ai-md-heading{color:var(--accent);margin:14px 0 7px;line-height:1.25}.ai-md-list{margin:6px 0 10px;padding-left:24px;line-height:1.55}.ai-md-list li{margin:3px 0}.ai-md-quote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(34,211,238,.08);border-radius:0 8px 8px 0}.ai-table-wrap{width:100%;overflow-x:auto;margin:10px 0 14px;border:1px solid var(--border);border-radius:9px}.ai-markdown-table{width:100%;min-width:460px;border-collapse:collapse;background:var(--surface);font-size:.78rem;line-height:1.35}.ai-markdown-table th{background:rgba(34,211,238,.16);color:var(--text);font-weight:800;text-align:left;padding:9px 10px;border-bottom:2px solid var(--accent)}.ai-markdown-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}.ai-markdown-table tr:last-child td{border-bottom:0}.ai-markdown-table tr:nth-child(even) td{background:rgba(255,255,255,.025)}.ai-code{overflow:auto;margin:10px 0;padding:10px;border-radius:8px;background:#101827;color:#dbeafe;font-size:.75rem;white-space:pre-wrap}.ai-code code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.ai-md-p code{padding:1px 4px;border-radius:4px;background:rgba(148,163,184,.2)}
@@ -1016,6 +1016,19 @@ em, i {
 @media(max-width:380px){.ns-quick-grid{grid-template-columns:1fr}}
 </style>
 
+
+<style id="noria-statistique-dashboard-v2">
+:root{--ns-ink:#10233f;--ns-muted:#64748b;--ns-line:#e3eaf2;--ns-bg:#f5f8fc;--ns-accent:#2563eb}
+#tab-hub{max-width:1240px;margin:0 auto;padding:clamp(12px,2.2vw,28px)!important;color:var(--text)}
+.ns-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;padding:clamp(22px,4vw,42px);border-radius:24px;background:linear-gradient(118deg,#101f3b 0%,#163d68 58%,#087e83 130%);color:#fff;box-shadow:0 18px 42px rgba(20,54,91,.18);min-height:245px}
+.ns-hero-copy{position:relative;z-index:2;max-width:690px}.ns-eyebrow{font-size:.67rem;font-weight:800;letter-spacing:1.45px;color:#b8d9f8;display:flex;align-items:center;gap:9px}.ns-live-dot{width:8px;height:8px;border-radius:50%;background:#4adeb5;box-shadow:0 0 0 5px #4adeb522}.ns-hero h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.05;margin:16px 0 10px;font-weight:850;letter-spacing:-1.5px;color:#fff}.ns-hero h1 span{color:#66e0c3}.ns-hero p{max-width:610px;color:#d5e4f3;font-size:clamp(.9rem,1.5vw,1.03rem);line-height:1.65;margin:0}.ns-hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.ns-primary-action,.ns-secondary-action{border:0;border-radius:11px;padding:12px 16px;font-weight:800;cursor:pointer}.ns-primary-action{background:#65e0c1;color:#073b3a}.ns-primary-action span{font-size:1.15rem;margin-right:5px}.ns-secondary-action{background:#ffffff18;color:#fff;border:1px solid #ffffff45}.ns-hero-art{width:235px;height:205px;position:relative;flex:0 0 235px;display:grid;place-items:center}.ns-art-ring{position:absolute;border:1px solid #ffffff26;border-radius:50%;width:190px;height:190px}.ns-ring-two{width:145px;height:145px;border-style:dashed}.ns-art-panel{position:relative;width:164px;height:132px;padding:20px 17px 12px;border:1px solid #ffffff55;border-radius:17px;background:linear-gradient(145deg,#ffffff28,#ffffff0c);backdrop-filter:blur(8px);box-shadow:0 18px 36px #07182b66;transform:rotate(-5deg)}.ns-art-bars{height:66px;display:flex;align-items:end;gap:8px;border-bottom:1px solid #ffffff66}.ns-art-bars i{display:block;flex:1;border-radius:5px 5px 0 0;background:linear-gradient(#8df3d4,#36b9b2)}.ns-art-bars i:nth-child(1){height:35%}.ns-art-bars i:nth-child(2){height:63%}.ns-art-bars i:nth-child(3){height:48%}.ns-art-bars i:nth-child(4){height:85%}.ns-art-bars i:nth-child(5){height:70%}.ns-art-bars i:nth-child(6){height:100%}.ns-art-line{position:absolute;right:18px;top:27px;color:#fff;font-size:2rem}.ns-art-caption{font-size:.48rem;letter-spacing:1.6px;color:#d8f5ef;margin-top:10px;text-align:center;font-weight:800}
+.ns-workflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin:18px 0 30px;padding:15px 18px;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:0 5px 16px rgba(15,35,65,.035)}.ns-workflow>div{display:grid;grid-template-columns:30px 1fr;column-gap:8px;align-items:center}.ns-workflow>div span{grid-row:span 2;width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:rgba(37,99,235,.1);color:#2563eb;font-size:.68rem;font-weight:900}.ns-workflow b{font-size:.82rem;color:var(--text)}.ns-workflow small{font-size:.66rem;color:var(--muted)}.ns-workflow>i{font-style:normal;color:#9aa9bb}
+.ns-section-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 14px}.ns-kicker{font-size:.63rem;letter-spacing:1.5px;font-weight:900;color:var(--accent)}.ns-section-heading h2{font-size:clamp(1.25rem,2vw,1.65rem);margin:5px 0 0;color:var(--text);letter-spacing:-.5px}.ns-heading-note{font-size:.75rem;color:var(--muted)}
+.ns-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ns-tool-card{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:17px 16px;min-height:112px;border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.ns-tool-card:hover{transform:translateY(-2px);border-color:#8bb5ed;box-shadow:0 12px 26px rgba(25,65,110,.09)}.ns-tool-featured{border-color:#9dc4f5;background:linear-gradient(110deg,var(--surface),rgba(37,99,235,.045))}.ns-tool-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:14px;font-size:1.55rem;font-weight:800}.ns-icon-blue{background:#e7f0ff;color:#2563eb}.ns-icon-teal{background:#e1f8f3;color:#07866e}.ns-icon-violet{background:#f0eaff;color:#7954d8}.ns-icon-orange{background:#fff1e4;color:#d97706}.ns-icon-pink{background:#ffeaf2;color:#d94683}.ns-icon-green{background:#e6f7e9;color:#27934b}.ns-icon-indigo{background:#e9edff;color:#4f58c9}.ns-icon-slate{background:#edf1f6;color:#52647a}.ns-tool-text{display:grid;gap:5px;min-width:0;flex:1}.ns-tool-text b{font-size:.91rem;font-weight:850}.ns-tool-text small{font-size:.74rem;line-height:1.45;color:var(--muted)}.ns-tool-arrow{font-size:1.1rem;color:#8da2ba}.ns-bottom-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px}.ns-bottom-card{display:flex;align-items:center;gap:11px;text-align:left;padding:13px;border:1px solid var(--border);border-radius:13px;background:var(--surface);color:var(--text);cursor:pointer}.ns-bottom-card>span{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--surface2);font-size:1.05rem;color:var(--accent)}.ns-bottom-card div{display:grid;gap:3px;flex:1}.ns-bottom-card b{font-size:.76rem}.ns-bottom-card small{font-size:.65rem;line-height:1.35;color:var(--muted)}.ns-bottom-card strong{color:var(--muted)}.ns-footnote{font-size:.68rem;line-height:1.5;color:var(--muted);margin:15px 2px 0}
+@media(max-width:720px){#tab-hub{padding:12px!important}.ns-hero{padding:22px 19px;border-radius:19px;min-height:0}.ns-hero-art{width:110px;height:130px;flex-basis:110px;opacity:.9}.ns-art-ring{width:112px;height:112px}.ns-ring-two{width:85px;height:85px}.ns-art-panel{width:95px;height:84px;padding:11px 10px 7px;border-radius:11px}.ns-art-bars{height:43px;gap:4px}.ns-art-line{font-size:1.2rem;top:13px;right:11px}.ns-art-caption{font-size:.32rem;margin-top:6px}.ns-workflow{gap:5px;padding:11px 8px;margin:13px 0 23px}.ns-workflow>div{grid-template-columns:23px 1fr;column-gap:5px}.ns-workflow>div span{width:22px;height:22px;font-size:.57rem}.ns-workflow b{font-size:.68rem}.ns-workflow small{font-size:.55rem}.ns-workflow>i{font-size:.7rem}.ns-tool-grid{gap:9px}.ns-tool-card{padding:13px 11px;min-height:108px;gap:10px}.ns-tool-icon{width:38px;height:38px;flex-basis:38px;border-radius:11px;font-size:1.2rem}.ns-tool-text b{font-size:.78rem}.ns-tool-text small{font-size:.66rem}.ns-bottom-grid{grid-template-columns:1fr}.ns-bottom-card{padding:11px}.ns-heading-note{display:none}}
+@media(max-width:420px){.ns-hero-art{display:none}.ns-workflow{grid-template-columns:1fr 12px 1fr;row-gap:10px}.ns-workflow>div:nth-of-type(3){grid-column:1}.ns-workflow>i:nth-of-type(2){grid-column:2}.ns-workflow>div:nth-of-type(4){grid-column:3;grid-row:2}.ns-workflow>i:nth-of-type(3){display:none}.ns-tool-grid{grid-template-columns:1fr}.ns-tool-card{min-height:88px}.ns-section-heading{align-items:start}}
+</style>
+
 </head>
 <body>
 
@@ -1025,7 +1038,7 @@ em, i {
   <!-- Spinner Firebase init -->
   <div id="authLoading" style="text-align:center">
     <div style="width:40px;height:40px;border:3px solid rgba(16,185,129,0.2);border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
-    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#0f172a;">Noria<span style="color:#10b981"> Education</span></div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#0f172a;">Noria<span style="color:#10b981"> Statistique</span></div>
     <div style="color:#64748b;font-size:0.78rem;margin-top:6px;">Vérification de la session…</div>
   </div>
   <div id="authCard" style="display:none;background:#ffffff;border:1px solid #334155;border-radius:18px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
@@ -1034,7 +1047,7 @@ em, i {
     </div>
     <!-- Logo -->
     <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#0f172a;">Noria<span style="color:#10b981"> Education</span></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#0f172a;">Noria<span style="color:#10b981"> Statistique</span></div>
       <p style="color:#64748b;font-size:0.82rem;margin-top:6px;">Plateforme d’analyse statistique et de collecte de données</p>
     </div>
 
@@ -1263,31 +1276,48 @@ em, i {
     </header>
 
     <div id="tab-hub" class="tab-content active">
-  <div class="sa-hub-header ns-welcome">
-    <div><h1>Noria Statistique</h1><p>Votre espace de travail dédié à la collecte, au traitement et à l'analyse statistique des données de recherche.</p></div>
-    <button class="btn btn-primary" onclick="enterSpace('recherche')">＋ Démarrer une analyse</button>
-  </div>
-  <div class="ns-section-title">Accès rapide</div>
-  <div class="ns-quick-grid">
-    <div class="ns-quick" onclick="showTab('data');toggleSidebar(false)"><div class="ns-ico">▤</div><h3>Importer un jeu de données</h3><p>Excel, CSV et préparation des variables pour l'analyse.</p></div>
-    <div class="ns-quick" onclick="showTab('desc');toggleSidebar(false)"><div class="ns-ico">▥</div><h3>Analyse descriptive</h3><p>Effectifs, pourcentages, indicateurs, tableaux et graphiques.</p></div>
-    <div class="ns-quick" onclick="showTab('cross');toggleSidebar(false)"><div class="ns-ico">⊞</div><h3>Analyses bivariées</h3><p>Tableaux croisés, tests d'association et comparaison.</p></div>
-    <div class="ns-quick" onclick="showTab('regression');toggleSidebar(false)"><div class="ns-ico">⌁</div><h3>Modèles statistiques</h3><p>Régressions et analyses explicatives.</p></div>
-    <div class="ns-quick" onclick="showTab('advanced');if(typeof initAdvancedStatsUI==='function')initAdvancedStatsUI();toggleSidebar(false)"><div class="ns-ico">⚗</div><h3>Analyses avancées</h3><p>Survie, ROC, ACP, fiabilité et méthodes spécialisées.</p></div>
-    <div class="ns-quick" onclick="showTab('dbbuilder');toggleSidebar(false)"><div class="ns-ico">▧</div><h3>Créer un questionnaire</h3><p>Concevoir une collecte et partager un formulaire en ligne.</p></div>
-    <div class="ns-quick" onclick="showTab('reponses');if(typeof loadDashboard==='function')loadDashboard();toggleSidebar(false)"><div class="ns-ico">◉</div><h3>Suivre les réponses</h3><p>Consulter les données recueillies et leur progression.</p></div>
-    <div class="ns-quick" onclick="showTab('history');if(typeof loadHistory==='function')loadHistory();toggleSidebar(false)"><div class="ns-ico">◷</div><h3>Mes projets et analyses</h3><p>Retrouver les travaux et exports précédents.</p></div>
-  </div>
-  <div class="ns-section-title">Produire et exploiter les résultats</div>
-  <div class="ns-quick-grid">
-    <div class="ns-quick" onclick="showTab('discussion');toggleSidebar(false)"><div class="ns-ico">☷</div><h3>Interprétation statistique</h3><p>Comprendre les résultats et organiser leur discussion.</p></div>
-    <div class="ns-quick" onclick="showTab('excel');toggleSidebar(false)"><div class="ns-ico">▦</div><h3>Rapports et exports</h3><p>Générer les livrables Word, Excel et PDF.</p></div>
-    <div class="ns-quick" onclick="showTab('protocole');toggleSidebar(false)"><div class="ns-ico">✎</div><h3>Méthodologie de recherche</h3><p>Structurer les méthodes, variables et protocoles d'étude.</p></div>
-    <div class="ns-quick" onclick="saGuideOpen()"><div class="ns-ico">ⓘ</div><h3>Guide d'utilisation</h3><p>Découvrir les étapes pour conduire une analyse fiable.</p></div>
-  </div>
-  <div class="ns-note">Noria Statistique est désormais présenté comme un environnement spécialisé en statistiques et collecte de données. Les modules de gestion non statistiques sont retirés de la navigation principale, sans suppression de leurs fichiers ni de leurs données.</div>
-  <div style="margin-top:20px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn btn-secondary" onclick="showTab('tarifs')">Voir les forfaits</button><button class="btn btn-secondary" onclick="showTab('faq')">Aide et assistance</button></div>
-</div>
+      <section class="ns-hero">
+        <div class="ns-hero-copy">
+          <div class="ns-eyebrow"><span class="ns-live-dot"></span> PLATEFORME D’ANALYSE & DE RECHERCHE</div>
+          <h1>Noria <span>Statistique</span></h1>
+          <p>De la collecte des données à l’interprétation des résultats : tous vos outils statistiques dans un espace clair et cohérent.</p>
+          <div class="ns-hero-actions">
+            <button class="ns-primary-action" onclick="enterSpace('recherche')"><span>＋</span> Démarrer une analyse</button>
+            <button class="ns-secondary-action" onclick="showTab('dbbuilder');toggleSidebar(false)">▤ Créer un questionnaire</button>
+          </div>
+        </div>
+        <div class="ns-hero-art" aria-hidden="true">
+          <div class="ns-art-ring ns-ring-one"></div><div class="ns-art-ring ns-ring-two"></div>
+          <div class="ns-art-panel"><div class="ns-art-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ns-art-line">⌁</div><div class="ns-art-caption">DATA · ANALYSE · IMPACT</div></div>
+        </div>
+      </section>
+
+      <section class="ns-workflow" aria-label="Parcours statistique">
+        <div><span>01</span><b>Collecter</b><small>Questionnaires & enquêtes</small></div><i>→</i>
+        <div><span>02</span><b>Préparer</b><small>Importer & nettoyer</small></div><i>→</i>
+        <div><span>03</span><b>Analyser</b><small>Tests & modèles</small></div><i>→</i>
+        <div><span>04</span><b>Restituer</b><small>Graphiques & rapports</small></div>
+      </section>
+
+      <div class="ns-section-heading"><div><span class="ns-kicker">VOTRE ESPACE DE TRAVAIL</span><h2>Que souhaitez-vous faire ?</h2></div><span class="ns-heading-note">Choisissez une activité pour commencer</span></div>
+      <div class="ns-tool-grid">
+        <button class="ns-tool-card ns-tool-featured" onclick="showTab('data');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-blue">⇧</span><span class="ns-tool-text"><b>Importer des données</b><small>Charger Excel ou CSV, vérifier les variables et préparer la base.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('desc');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-teal">▥</span><span class="ns-tool-text"><b>Analyse descriptive</b><small>Fréquences, moyennes, dispersion, tableaux et graphiques.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('cross');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-violet">⊞</span><span class="ns-tool-text"><b>Analyses bivariées</b><small>Tableaux croisés, tests d’association et comparaisons.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('regression');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-orange">⌁</span><span class="ns-tool-text"><b>Régressions & modèles</b><small>Explorer les relations et facteurs associés.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('advanced');if(typeof initAdvancedStatsUI==='function')initAdvancedStatsUI();toggleSidebar(false)"><span class="ns-tool-icon ns-icon-pink">⌘</span><span class="ns-tool-text"><b>Analyses avancées</b><small>Survie, ROC, ACP, fiabilité et méthodes spécialisées.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('dbbuilder');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-green">▤</span><span class="ns-tool-text"><b>Questionnaires & collecte</b><small>Créer un formulaire, diffuser un lien et recueillir des réponses.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('discussion');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-indigo">✧</span><span class="ns-tool-text"><b>Interpréter les résultats</b><small>Obtenir une lecture statistique structurée et prudente.</small></span><span class="ns-tool-arrow">↗</span></button>
+        <button class="ns-tool-card" onclick="showTab('excel');toggleSidebar(false)"><span class="ns-tool-icon ns-icon-slate">▧</span><span class="ns-tool-text"><b>Rapports & visualisations</b><small>Préparer des tableaux, figures et exports Word, Excel ou PDF.</small></span><span class="ns-tool-arrow">↗</span></button>
+      </div>
+
+      <section class="ns-bottom-grid">
+        <button class="ns-bottom-card" onclick="showTab('history');if(typeof loadHistory==='function')loadHistory();toggleSidebar(false)"><span>◷</span><div><b>Mes projets et analyses</b><small>Retrouver les travaux récents et les résultats enregistrés.</small></div><strong>→</strong></button>
+        <button class="ns-bottom-card" onclick="showTab('protocole');toggleSidebar(false)"><span>⌑</span><div><b>Méthodologie de recherche</b><small>Structurer les objectifs, variables et méthodes d’étude.</small></div><strong>→</strong></button>
+        <button class="ns-bottom-card" onclick="saGuideOpen()"><span>?</span><div><b>Guide & assistance</b><small>Comprendre les étapes et utiliser les outils efficacement.</small></div><strong>→</strong></button>
+      </section>
+      <p class="ns-footnote">Noria Statistique est consacré à la collecte, à la préparation, à l’analyse et à la restitution de données. Les modules de gestion non statistiques ne sont pas présentés dans cet espace de travail.</p>
+    </div>
 
     <div id="tab-collecte" class="tab-content">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
