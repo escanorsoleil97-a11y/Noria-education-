@@ -37,7 +37,7 @@ const ALLOWED_PROVIDERS = new Set(['cerebras','groq','gemini','mistral','deepsee
 // réponse JSON possible passé ce délai). Ce proxy fait un appel Auth Firebase +
 // une vérification de crédits Firestore avant l'appel IA (~0.5-1.5s), d'où une
 // marge de sécurité sous les 10s plutôt que 12s.
-const PROVIDER_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS, 10) || 20000; // defaut 20s (Pro 26s); Free Netlify ~10s -> set AI_TIMEOUT_MS=9000 if Free
+const PROVIDER_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS, 10) || 8000; // monter à ~24000 si le plan Netlify autorise 26 s
 async function withTimeout(promise, ms, label) {
   let timer;
   const timeout = new Promise((_, reject) => {
