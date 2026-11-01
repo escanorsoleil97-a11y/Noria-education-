@@ -2,9 +2,18 @@ name: Déployer Noria Statistique
 
 on:
   workflow_dispatch:
+    inputs:
+      zip_name:
+        description: "Nom du ZIP à la racine du dépôt (laisser vide = détection automatique)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
+
+concurrency:
+  group: deploy-noria
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -18,17 +27,25 @@ jobs:
 
       - name: Préparer et déployer Noria
         shell: bash
+        env:
+          ZIP_INPUT: ${{ github.event.inputs.zip_name }}
         run: |
           set -Eeuo pipefail
 
-          ZIP="Noria_Statistique_FINAL.zip"
-
           echo "Recherche du fichier ZIP..."
 
-          if [ ! -f "$ZIP" ]; then
-            echo "Erreur : $ZIP est introuvable à la racine du dépôt."
+          ZIP=""
+          if [ -n "${ZIP_INPUT:-}" ]; then
+            ZIP="$ZIP_INPUT"
+          else
+            # Le ZIP le plus récent à la racine dont le nom commence par Noria_Statistique
+            ZIP="$(ls -t Noria_Statistique*.zip 2>/dev/null | head -n 1 || true)"
+          fi
+
+          if [ -z "$ZIP" ] || [ ! -f "$ZIP" ]; then
+            echo "Erreur : aucun ZIP Noria_Statistique*.zip trouvé à la racine du dépôt."
             echo "Fichiers présents :"
-            find . -maxdepth 3 -type f -print
+            find . -maxdepth 3 -type f -not -path "./.git/*" -print
             exit 1
           fi
 
@@ -36,7 +53,6 @@ jobs:
 
           rm -rf /tmp/noria
           mkdir -p /tmp/noria
-
           unzip -o -q "$ZIP" -d /tmp/noria
 
           SOURCE="/tmp/noria/Noria_Education"
@@ -54,7 +70,20 @@ jobs:
             exit 1
           fi
 
-          echo "Nettoyage de l'ancienne version..."
+          # Contrôle de la correction de l'import (DATA/COLS doivent être des var globales)
+          if ! grep -q "<script>var DATA=\[\];var COLS=\[\];" "$SOURCE/index.html"; then
+            echo "Erreur : index.html ne contient pas la correction var DATA / var COLS."
+            echo "Ce ZIP n'est pas la version corrigée (v3 ou plus récente)."
+            exit 1
+          fi
+
+          # Contrôle de la présence des fonctions Netlify
+          if [ ! -f "$SOURCE/netlify/functions/admin.js" ] || [ ! -f "$SOURCE/netlify.toml" ]; then
+            echo "Erreur : netlify.toml ou netlify/functions/admin.js manquant dans le ZIP."
+            exit 1
+          fi
+
+          echo "Nettoyage de l'ancienne version (le ZIP est supprimé du dépôt pour ne pas être publié)..."
 
           find . -mindepth 1 -maxdepth 1 \
             ! -name ".git" \
@@ -62,7 +91,6 @@ jobs:
             -exec rm -rf {} +
 
           echo "Copie de la nouvelle version..."
-
           cp -a "$SOURCE/." .
 
           echo "Fichiers déployés :"
@@ -78,5 +106,9 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Déployer Noria Statistique"
+          git commit -m "Déployer Noria Statistique ($ZIP)"
+
+          git pull --rebase origin main || true
           git push origin HEAD:main
+
+          echo "Déploiement poussé sur main. Netlify va publier automatiquement."
