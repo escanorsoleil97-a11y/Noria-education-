@@ -5,26 +5,43 @@
 // ══════════════════════════════════════════════════════════════════════════════
 
 const admin = require('firebase-admin');
-if (!admin.apps.length) {
-  admin.initializeApp({ credential: admin.credential.cert(
-    JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-  )});
-}
-const db = admin.firestore();
+const { adminUids } = require('./_security');
 
-const ADMIN_UIDS = new Set([
-  'SBATLA0GmVbeYWWpWrPoRTTveb32',
-  '0f9FMESHK6gq5Gl77tquCETbFow1'
-]);
+let INIT_ERROR = null;
+if (!admin.apps.length) {
+  try {
+    if (!process.env.FIREBASE_SERVICE_ACCOUNT) throw new Error('Variable Netlify FIREBASE_SERVICE_ACCOUNT absente');
+    admin.initializeApp({ credential: admin.credential.cert(
+      JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    )});
+  } catch (e) {
+    INIT_ERROR = 'Configuration serveur invalide : ' + e.message;
+  }
+}
+const db = INIT_ERROR ? null : admin.firestore();
+
+// UIDs admin : variable Netlify ADMIN_UIDS (séparés par des virgules) ou valeurs par défaut.
+const ADMIN_UIDS = adminUids();
+const ADMIN_ROLES = new Set(['admin', 'adnim', 'super_admin']);
 
 // ── Vérification admin ───────────────────────────────────────────────────────
 async function verifyAdmin(token) {
+  if (INIT_ERROR) throw new Error(INIT_ERROR);
   if (!token) throw new Error('Token manquant');
-  const decoded = await admin.auth().verifyIdToken(token);
-  if (!ADMIN_UIDS.has(decoded.uid)) throw new Error('Accès refusé');
+  let decoded;
+  try {
+    decoded = await admin.auth().verifyIdToken(token);
+  } catch (e) {
+    throw new Error('Session invalide ou expirée (' + (e.code || e.message) + '). Rouvrez Admin depuis Noria Education.');
+  }
+  if (!ADMIN_UIDS.has(decoded.uid)) {
+    throw new Error('UID non autorisé : ' + decoded.uid + '. Ajoutez cet UID dans la variable Netlify ADMIN_UIDS puis redéployez.');
+  }
   const snap = await db.collection('users').doc(decoded.uid).get();
-  const role = snap.data()?.role || '';
-  if (role !== 'admin' && role !== 'adnim') throw new Error('Rôle admin requis');
+  const role = String(snap.data()?.role || '').trim().toLowerCase();
+  if (!ADMIN_ROLES.has(role)) {
+    throw new Error('Rôle admin requis : le document users/' + decoded.uid + ' doit avoir role = "admin" (actuel : "' + role + '").');
+  }
   return decoded.uid;
 }
 
@@ -1235,7 +1252,7 @@ exports.handler = async (event) => {
     return { statusCode: 403, headers, body: `<!DOCTYPE html><html><body style="background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;flex-direction:column;gap:12px">
       <div style="font-size:2.5rem">⛔</div>
       <h2 style="color:#f43f5e">Accès refusé</h2>
-      <p style="color:#64748b">${e.message}</p>
+      <p style="color:#64748b">${String(e.message).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;"}[c]))}</p>
       <a href="/" style="color:#10b981;font-size:0.85rem">← Retour à l'app</a>
     </body></html>` };
   }
