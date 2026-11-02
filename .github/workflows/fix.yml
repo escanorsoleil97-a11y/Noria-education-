@@ -46,11 +46,10 @@ jobs:
           fi
           echo "ZIP : $ZIP"
 
-          # 2) Extraction dans un dossier hors dépôt
+          # 2) Extraction hors dépôt
           WORK="$(mktemp -d)"
           unzip -o -q "$ZIP" -d "$WORK"
 
-          # Dossier source = celui qui contient index.html et netlify.toml (peu importe son nom)
           SOURCE=""
           for d in "$WORK" "$WORK"/*/ "$WORK"/*/*/; do
             d="${d%/}"
@@ -63,10 +62,10 @@ jobs:
           fi
           echo "Source : $SOURCE"
 
-          # 3) Contrôles de sécurité avant de toucher au dépôt
+          # 3) Contrôles avant de toucher au dépôt
           if ! grep -q 'var DATA=\[\];var COLS=\[\];' "$SOURCE/index.html" \
              || grep -q 'let DATA=\[\];let COLS=\[\];' "$SOURCE/index.html"; then
-            echo "::error::Correction d'import absente : DATA/COLS doivent être déclarés avec var (version v3 ou plus récente)."
+            echo "::error::Correction d'import absente : DATA/COLS doivent être déclarés avec var (v3 ou plus récent)."
             exit 1
           fi
           if [ ! -f "$SOURCE/netlify/functions/admin.js" ]; then
@@ -74,7 +73,6 @@ jobs:
             exit 1
           fi
 
-          # Syntaxe de tous les scripts inline (hors modules) : évite de publier une page cassée
           node -e '
             const fs=require("fs");
             const s=fs.readFileSync(process.argv[1],"utf8");
@@ -104,7 +102,7 @@ jobs:
           fi
           git commit -m "Déployer Noria Statistique ($ZIP)"
 
-          # 5) Push avec 3 tentatives (sans masquer les vraies erreurs)
+          # 5) Push avec 3 tentatives
           for i in 1 2 3; do
             if git push origin HEAD:main; then
               echo "Poussé sur main. Netlify publie automatiquement."
