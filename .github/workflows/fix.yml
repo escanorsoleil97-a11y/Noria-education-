@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       zip_name:
-        description: "Nom du ZIP à la racine du dépôt (laisser vide = détection automatique)"
+        description: "Nom du ZIP à la racine du dépôt (vide = le plus récent Noria_Statistique*.zip)"
         required: false
         default: ""
 
@@ -18,11 +18,13 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Préparer et déployer Noria
@@ -32,83 +34,84 @@ jobs:
         run: |
           set -Eeuo pipefail
 
-          echo "Recherche du fichier ZIP..."
-
-          ZIP=""
-          if [ -n "${ZIP_INPUT:-}" ]; then
-            ZIP="$ZIP_INPUT"
-          else
-            # Le ZIP le plus récent à la racine dont le nom commence par Noria_Statistique
+          # 1) ZIP
+          ZIP="${ZIP_INPUT:-}"
+          if [ -z "$ZIP" ]; then
             ZIP="$(ls -t Noria_Statistique*.zip 2>/dev/null | head -n 1 || true)"
           fi
-
           if [ -z "$ZIP" ] || [ ! -f "$ZIP" ]; then
-            echo "Erreur : aucun ZIP Noria_Statistique*.zip trouvé à la racine du dépôt."
-            echo "Fichiers présents :"
-            find . -maxdepth 3 -type f -not -path "./.git/*" -print
+            echo "::error::Aucun ZIP Noria_Statistique*.zip trouvé à la racine."
+            find . -maxdepth 2 -type f -not -path "./.git/*" -print
+            exit 1
+          fi
+          echo "ZIP : $ZIP"
+
+          # 2) Extraction dans un dossier hors dépôt
+          WORK="$(mktemp -d)"
+          unzip -o -q "$ZIP" -d "$WORK"
+
+          # Dossier source = celui qui contient index.html et netlify.toml (peu importe son nom)
+          SOURCE=""
+          for d in "$WORK" "$WORK"/*/ "$WORK"/*/*/; do
+            d="${d%/}"
+            if [ -f "$d/index.html" ] && [ -f "$d/netlify.toml" ]; then SOURCE="$d"; break; fi
+          done
+          if [ -z "$SOURCE" ]; then
+            echo "::error::index.html + netlify.toml introuvables dans le ZIP."
+            find "$WORK" -maxdepth 3 -print
+            exit 1
+          fi
+          echo "Source : $SOURCE"
+
+          # 3) Contrôles de sécurité avant de toucher au dépôt
+          if ! grep -q 'var DATA=\[\];var COLS=\[\];' "$SOURCE/index.html" \
+             || grep -q 'let DATA=\[\];let COLS=\[\];' "$SOURCE/index.html"; then
+            echo "::error::Correction d'import absente : DATA/COLS doivent être déclarés avec var (version v3 ou plus récente)."
+            exit 1
+          fi
+          if [ ! -f "$SOURCE/netlify/functions/admin.js" ]; then
+            echo "::error::netlify/functions/admin.js manquant."
             exit 1
           fi
 
-          echo "ZIP trouvé : $ZIP"
+          # Syntaxe de tous les scripts inline (hors modules) : évite de publier une page cassée
+          node -e '
+            const fs=require("fs");
+            const s=fs.readFileSync(process.argv[1],"utf8");
+            const re=/<script([^>]*)>([\s\S]*?)<\/script>/g;
+            let m,bad=0,n=0;
+            while((m=re.exec(s))){
+              if(/src=|type="module"/.test(m[1]))continue;
+              n++;
+              try{new Function(m[2])}catch(e){bad++;console.log("Erreur de syntaxe :",e.message)}
+            }
+            console.log(n+" scripts vérifiés, "+bad+" erreur(s)");
+            process.exit(bad?1:0);
+          ' "$SOURCE/index.html"
 
-          rm -rf /tmp/noria
-          mkdir -p /tmp/noria
-          unzip -o -q "$ZIP" -d /tmp/noria
-
-          SOURCE="/tmp/noria/Noria_Education"
-
-          if [ ! -d "$SOURCE" ]; then
-            echo "Erreur : le dossier Noria_Education est introuvable dans le ZIP."
-            echo "Structure extraite :"
-            find /tmp/noria -maxdepth 3 -print
-            exit 1
-          fi
-
-          if [ ! -f "$SOURCE/index.html" ]; then
-            echo "Erreur : index.html est introuvable dans $SOURCE."
-            find "$SOURCE" -maxdepth 3 -type f -print
-            exit 1
-          fi
-
-          # Contrôle de la correction de l'import (DATA/COLS doivent être des var globales)
-          if ! grep -q "<script>var DATA=\[\];var COLS=\[\];" "$SOURCE/index.html"; then
-            echo "Erreur : index.html ne contient pas la correction var DATA / var COLS."
-            echo "Ce ZIP n'est pas la version corrigée (v3 ou plus récente)."
-            exit 1
-          fi
-
-          # Contrôle de la présence des fonctions Netlify
-          if [ ! -f "$SOURCE/netlify/functions/admin.js" ] || [ ! -f "$SOURCE/netlify.toml" ]; then
-            echo "Erreur : netlify.toml ou netlify/functions/admin.js manquant dans le ZIP."
-            exit 1
-          fi
-
-          echo "Nettoyage de l'ancienne version (le ZIP est supprimé du dépôt pour ne pas être publié)..."
-
-          find . -mindepth 1 -maxdepth 1 \
-            ! -name ".git" \
-            ! -name ".github" \
-            -exec rm -rf {} +
-
-          echo "Copie de la nouvelle version..."
-          cp -a "$SOURCE/." .
-
-          echo "Fichiers déployés :"
-          ls -la
-
+          # 4) Remplacement du contenu (le ZIP n'est pas republié)
           git config user.name "Noria Bot"
           git config user.email "noria-bot@users.noreply.github.com"
+          git pull --rebase origin main
+
+          find . -mindepth 1 -maxdepth 1 ! -name ".git" ! -name ".github" -exec rm -rf {} +
+          cp -a "$SOURCE/." .
 
           git add -A
-
           if git diff --cached --quiet; then
             echo "Aucune modification à enregistrer."
             exit 0
           fi
-
           git commit -m "Déployer Noria Statistique ($ZIP)"
 
-          git pull --rebase origin main || true
-          git push origin HEAD:main
-
-          echo "Déploiement poussé sur main. Netlify va publier automatiquement."
+          # 5) Push avec 3 tentatives (sans masquer les vraies erreurs)
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Poussé sur main. Netlify publie automatiquement."
+              exit 0
+            fi
+            echo "Push refusé (tentative $i/3), nouvelle synchronisation..."
+            git pull --rebase origin main
+          done
+          echo "::error::Échec du push après 3 tentatives."
+          exit 1
