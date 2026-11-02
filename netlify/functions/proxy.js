@@ -409,7 +409,7 @@ async function callProvider(provider, prompt, model, opts = {}) {
         if (!dsKeys.length) throw new Error('DEEPSEEK_KEY non configurée');
         const maxTok = Math.min(4096, Math.max(256, parseInt(opts.maxTokens, 10) || 2048));
         const deadline = (opts.startedAt || Date.now()) + Math.max(2000, PROVIDER_TIMEOUT_MS - 1200);
-        text = await tryDeepSeek(dsKeys, prompt, model || process.env.DEEPSEEK_MODEL || 'deepseek-flash', maxTok, deadline, opts);
+        text = await tryDeepSeek(dsKeys, prompt, model || process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash', maxTok, deadline, opts);
         break;
       }
 

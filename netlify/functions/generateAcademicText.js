@@ -336,7 +336,7 @@ async function callDeepSeek(prompt) {
     const res = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: process.env.DEEPSEEK_MODEL || 'deepseek-flash', messages: [{ role: 'user', content: prompt }], max_tokens: 2048, thinking: { type: 'disabled' } }),
+      body: JSON.stringify({ model: process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash', messages: [{ role: 'user', content: prompt }], max_tokens: 2048, thinking: { type: 'disabled' } }),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error?.message || 'Erreur DeepSeek');

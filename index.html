@@ -14,13 +14,14 @@
 /* Noria API bridge: le frontend Pages utilise les fonctions hébergées sur Netlify. */
 (function(){
   var API_ORIGIN = "https://noria-education.netlify.app";
+  var USE_BRIDGE = false; /* false : Cloudflare Pages transmet lui-même /.netlify/functions/* à Netlify (functions/_middleware.js). Mettre true pour revenir à l'ancien pont. */
   var nativeFetch = window.fetch.bind(window);
   window.fetch = function(input, init){
     try {
       var raw = (typeof input === "string" || input instanceof URL) ? String(input) : (input && input.url);
       if (raw) {
         var u = new URL(raw, window.location.href);
-        if (u.origin === window.location.origin && u.pathname.indexOf("/.netlify/functions/") === 0) {
+        if (USE_BRIDGE && u.origin === window.location.origin && u.pathname.indexOf("/.netlify/functions/") === 0) {
           u = new URL(u.pathname + u.search + u.hash, API_ORIGIN);
           if (typeof input === "string" || input instanceof URL) input = u.toString();
           else input = new Request(u.toString(), input);
