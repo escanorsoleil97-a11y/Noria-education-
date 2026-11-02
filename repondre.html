@@ -3,81 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Questionnaire</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Questionnaire — StatAnalyse Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#04080f;--surface:#0b1220;--surface2:#111d30;--border:rgba(255,255,255,.07);--accent:#00d4aa;--text:#e2e8f0;--muted:#4a6380;--card:#0d1828;}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+:root{--bg:#04080f;--surface:#0b1220;--surface2:#111d30;--border:rgba(255,255,255,.07);--accent:#00d4aa;--text:#e2e8f0;--muted:#4a6380;--muted2:#7d93ad;--card:#0d1828;--danger:#f43f5e;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:16px 16px 40px}
 .container{width:100%;max-width:620px}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;text-align:center;margin-bottom:18px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;text-align:center;margin:6px 0 18px}
 .logo span{color:var(--accent)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:14px}
-.q-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);margin-bottom:4px}
-.q-subtitle{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.q-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);margin-bottom:4px;overflow-wrap:anywhere}
+.q-subtitle{font-size:.82rem;color:var(--muted2);margin-bottom:14px}
+.attempt-meta{font-size:.8rem;color:#fbbf24;margin:-6px 0 12px;display:none}
 .q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;transition:border-color .2s}
-.q-card.has-error{border-color:rgba(244,63,94,.5)}
-.q-label{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
-.q-num{min-width:22px;height:22px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.2);border-radius:4px;font-size:.7rem;font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.req{color:#f43f5e;margin-left:2px}
-.opt-tag{font-size:.62rem;color:var(--muted);border:1px solid var(--border);border-radius:3px;padding:1px 5px;margin-left:4px}
-input[type=text],input[type=number],input[type=date],select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:10px 12px;width:100%;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
-input:focus,select:focus,textarea:focus{border-color:rgba(0,212,170,.4)}
+.q-card.has-error{border-color:rgba(244,63,94,.6)}
+.q-card .q-err{display:none;color:#fb7185;font-size:.74rem;margin-top:8px}
+.q-card.has-error .q-err{display:block}
+.q-label{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.q-label>span:last-child{overflow-wrap:anywhere}
+.q-num{min-width:24px;height:24px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.2);border-radius:5px;font-size:.7rem;font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0}
+.req{color:var(--danger);margin-left:3px}
+.opt-tag{font-size:.62rem;color:var(--muted2);border:1px solid var(--border);border-radius:3px;padding:1px 5px;margin-left:6px;white-space:nowrap}
+input[type=text],input[type=number],input[type=date],select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px;width:100%;font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s;min-height:46px;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted2) 50%),linear-gradient(135deg,var(--muted2) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:36px}
+select option{background:#111d30;color:#e2e8f0}
+input[type=date]{color-scheme:dark}
+input:focus,select:focus,textarea:focus{border-color:rgba(0,212,170,.5)}
 input::placeholder,textarea::placeholder{color:var(--muted)}
 .options-list{display:flex;flex-direction:column;gap:8px}
-.opt-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.opt-item{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .15s;min-height:46px}
 .opt-item:hover{border-color:rgba(0,212,170,.3);background:rgba(0,212,170,.04)}
 .opt-item.selected{border-color:rgba(0,212,170,.5);background:rgba(0,212,170,.08)}
-.opt-item input[type=radio],.opt-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
-.opt-item label{font-size:.86rem;cursor:pointer;flex:1}
-.scale-row{display:flex;gap:8px;flex-wrap:wrap}
-.scale-btn{flex:1;min-width:44px;padding:10px 4px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-weight:700;font-size:.9rem;cursor:pointer;text-align:center;transition:all .15s}
+.opt-item input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;cursor:pointer;margin:0}
+.opt-item span{font-size:.88rem;flex:1;overflow-wrap:anywhere}
+.scale-row{display:flex;gap:8px}
+.scale-btn{flex:1;min-width:0;padding:12px 4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-weight:700;font-size:.95rem;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit}
 .scale-btn:hover{border-color:rgba(0,212,170,.4)}
 .scale-btn.selected{background:rgba(0,212,170,.15);border-color:var(--accent);color:var(--accent)}
-.scale-labels{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-top:5px;padding:0 2px}
-.progress-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:18px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#3b82f6);transition:width .4s ease;border-radius:2px}
-.btn-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),rgba(0,212,170,.8));color:#000;font-weight:800;font-size:.95rem;font-family:'Syne',sans-serif;border:none;border-radius:8px;cursor:pointer;margin-top:8px;box-shadow:0 8px 24px rgba(0,212,170,.2);transition:all .2s}
+.scale-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted2);margin-top:6px;padding:0 2px}
+.progress-wrap{position:sticky;top:0;z-index:5;background:var(--card);padding:8px 0 10px;margin:0 0 10px}
+.progress-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#3b82f6);transition:width .35s ease;border-radius:2px;width:0}
+.progress-txt{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted2);margin-top:5px}
+.btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),rgba(0,212,170,.8));color:#000;font-weight:800;font-size:.95rem;font-family:'Syne',sans-serif;border:none;border-radius:9px;cursor:pointer;margin-top:8px;box-shadow:0 8px 24px rgba(0,212,170,.2);transition:all .2s}
 .btn-submit:active{transform:scale(.98)}
 .btn-submit:disabled{opacity:.5;cursor:not-allowed}
-.btn-again{width:100%;padding:12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-weight:600;font-size:.88rem;border-radius:8px;cursor:pointer;margin-top:10px}
-.loading{text-align:center;padding:50px 20px;color:var(--muted)}
-.spinner{display:inline-block;width:30px;height:30px;border:3px solid rgba(0,212,170,.15);border-radius:50%;border-top-color:var(--accent);animation:spin 1s ease-in-out infinite;margin-bottom:14px}
+.btn-again{width:100%;padding:13px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-weight:600;font-size:.88rem;border-radius:9px;cursor:pointer;margin-top:14px}
+.btn-again:disabled{opacity:.5}
+.loading{text-align:center;padding:50px 20px;color:var(--muted2)}
+.spinner{display:inline-block;width:30px;height:30px;border:3px solid rgba(0,212,170,.15);border-radius:50%;border-top-color:var(--accent);animation:spin 1s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.error-box{padding:11px 14px;background:rgba(244,63,94,.1);border-left:3px solid #f43f5e;border-radius:6px;font-size:.82rem;color:#fb7185;margin:10px 0}
-.success-wrap{text-align:center;padding:40px 20px}
-.success-icon{font-size:3rem;margin-bottom:16px}
+.error-box{padding:11px 14px;background:rgba(244,63,94,.1);border-left:3px solid var(--danger);border-radius:6px;font-size:.84rem;color:#fb7185;margin:10px 0;overflow-wrap:anywhere}
+.draft-note{font-size:.72rem;color:var(--muted2);text-align:center;margin-top:10px}
+.success-wrap{text-align:center;padding:36px 20px}
+.success-icon{font-size:3rem;margin-bottom:14px}
 .success-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent);margin-bottom:8px}
-.success-sub{font-size:.85rem;color:var(--muted)}
+.success-sub{font-size:.88rem;color:var(--muted2);line-height:1.5}
+.receipt{display:inline-block;margin-top:16px;padding:10px 16px;border:1px dashed rgba(0,212,170,.4);border-radius:8px;background:rgba(0,212,170,.06);font-size:.8rem;color:var(--text)}
+.receipt b{color:var(--accent);letter-spacing:1px}
 </style>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lf4HIstAAAAAJI9u9RvcbWm5sk_42rwEgpT6ADZ"></script>
 </head>
 <body>
 <div class="container">
   <div class="logo">Stat<span>Analyse</span> Pro</div>
+
   <div id="stateLoading" class="card loading">
     <div class="spinner"></div>
     <p>Chargement du questionnaire...</p>
   </div>
+
   <div id="stateError" class="card" style="display:none">
     <div class="error-box" id="errorMsg">Questionnaire introuvable.</div>
+    <button class="btn-again" id="btnRetryLoad" onclick="init()">🔄 Réessayer</button>
   </div>
+
   <div id="stateForm" style="display:none">
     <div class="card">
       <div class="q-title" id="formTitle"></div>
       <div class="q-subtitle" id="formSubtitle"></div>
-      <div id="attemptMeta" class="q-subtitle" style="display:none;color:#fbbf24"></div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="attemptMeta" class="attempt-meta"></div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-txt"><span id="progressTxt">0 / 0</span><span id="progressPct">0 %</span></div>
+      </div>
       <div id="formFields"></div>
       <div id="formError" class="error-box" style="display:none"></div>
-      <button class="btn-submit" id="btnSubmit" onclick="submitResponse()">✅ Envoyer mes réponses</button>
+      <button class="btn-submit" id="btnSubmit" type="button" onclick="submitResponse()">✅ Envoyer mes réponses</button>
+      <div class="draft-note" id="draftNote">💾 Vos réponses sont sauvegardées automatiquement sur cet appareil.</div>
     </div>
   </div>
+
   <div id="stateSuccess" class="card success-wrap" style="display:none">
     <div class="success-icon">🎉</div>
-    <div class="success-title">Réponse envoyée !</div>
-    <p class="success-sub">Merci pour votre participation.</p>
-    <button class="btn-again" onclick="repondreEncore()">Remplir à nouveau</button>
+    <div class="success-title">Réponse enregistrée !</div>
+    <p class="success-sub">Merci pour votre participation. Votre réponse a bien été reçue.</p>
+    <div class="receipt" id="receipt" style="display:none"></div>
+    <div id="againError" class="error-box" style="display:none;text-align:left"></div>
+    <button class="btn-again" id="btnAgain" type="button" onclick="repondreEncore()">Remplir à nouveau</button>
   </div>
 </div>
 
@@ -88,7 +114,16 @@ const FS_API_KEY = 'AIzaSyA3pT5-TNZTiOUz3AeMRUBdblucyp0EWSI';
 let QUESTIONNAIRE = null;
 let ATTEMPT = null;
 let ATTEMPT_TIMER = null;
+let SUBMITTING = false;
+let DRAFT_TIMER = null;
 
+const $ = id => document.getElementById(id);
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function show(id, on) { const el = $(id); if (el) el.style.display = on ? 'block' : 'none'; }
+
+/* ---------- Conversion Firestore REST <-> objets ---------- */
 function fsToObj(doc) {
   const out = { _id: doc.name.split('/').pop() };
   for (const [k, v] of Object.entries(doc.fields || {})) {
@@ -101,18 +136,7 @@ function fsToObj(doc) {
   return out;
 }
 
-function objToFs(obj) {
-  const fields = {};
-  for (const [k, v] of Object.entries(obj)) {
-    if (Array.isArray(v)) fields[k] = { arrayValue: { values: v.map(i => ({ stringValue: String(i) })) } };
-    else if (typeof v === 'object' && v !== null) fields[k] = { mapValue: { fields: objToFs(v) } };
-    else if (typeof v === 'number') fields[k] = { integerValue: String(v) };
-    else if (typeof v === 'boolean') fields[k] = { booleanValue: v };
-    else fields[k] = { stringValue: String(v ?? '') };
-  }
-  return fields;
-}
-
+/* ---------- App Check (échec silencieux : ne bloque jamais le formulaire) ---------- */
 let _appCheckPromise = null;
 async function getAppCheckToken() {
   try {
@@ -142,6 +166,7 @@ async function getAppCheckToken() {
     return result && result.token ? result.token : null;
   } catch (e) {
     console.warn('App Check token indisponible', e);
+    _appCheckPromise = null; // permettra une nouvelle tentative au prochain appel
     return null;
   }
 }
@@ -161,15 +186,7 @@ async function fsQuery(col, field, value) {
   return data.filter(d => d.document).map(d => fsToObj(d.document));
 }
 
-async function fsAdd(col, obj) {
-  const appCheckToken = await getAppCheckToken();
-  const res = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${FS_PROJECT}/databases/(default)/documents/${col}?key=${FS_API_KEY}`,
-    { method:'POST', headers:{'Content-Type':'application/json', ...(appCheckToken ? {'X-Firebase-AppCheck': appCheckToken} : {})}, body: JSON.stringify({ fields: objToFs(obj) }) }
-  );
-  if (!res.ok) throw new Error(await res.text());
-  return await res.json();
-}
+class HttpError extends Error { constructor(msg, status) { super(msg); this.status = status; } }
 
 async function callSecureFunction(name, body) {
   const appCheckToken = await getAppCheckToken();
@@ -177,168 +194,303 @@ async function callSecureFunction(name, body) {
   if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
   const res = await fetch('/.netlify/functions/' + name, { method:'POST', headers, body:JSON.stringify(body) });
   const payload = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(payload.message || payload.error || 'Erreur serveur');
+  if (!res.ok) throw new HttpError(payload.message || payload.error || 'Erreur serveur', res.status);
   return payload;
 }
 
-async function init() {
-  const qid = new URLSearchParams(window.location.search).get('q');
-  if (!qid) { showError('Lien invalide — aucun questionnaire spécifié.'); return; }
-  try {
-    const results = await fsQuery('questionnaires', 'qid', qid);
-    if (!results.length) { showError('Questionnaire introuvable ou expiré.'); return; }
-    QUESTIONNAIRE = results[0];
-    try { QUESTIONNAIRE.variables = JSON.parse(QUESTIONNAIRE.variables || '[]'); } catch(e) { QUESTIONNAIRE.variables = []; }
-    if (!Array.isArray(QUESTIONNAIRE.variables)) QUESTIONNAIRE.variables = [];
-    const started = await callSecureFunction('startAttempt', { qid });
-    ATTEMPT = started;
-    renderForm();
-    startAttemptTimer();
-  } catch(e) { showError('Erreur de connexion : ' + e.message); }
+/* ---------- Types de questions (tolère les anciens / importés) ---------- */
+function normType(v) {
+  const t = String(v.type || '').toLowerCase().trim();
+  const hasOpts = Array.isArray(v.options) && v.options.length > 0;
+  if (['list','select','select_one','dropdown','liste'].includes(t)) return 'list';
+  if (['radio','choice','single','choix'].includes(t)) return 'radio';
+  if (['checkbox','multiple','select_multiple','multi'].includes(t)) return 'checkbox';
+  if (['scale','likert','echelle','échelle'].includes(t)) return 'scale';
+  if (['number','integer','decimal','numeric','num','nombre'].includes(t)) return 'number';
+  if (t === 'date') return 'date';
+  if (['textarea','longtext'].includes(t)) return 'textarea';
+  if (hasOpts) return 'radio'; // des modalités existent : on propose un choix plutôt qu'un champ vide
+  return 'text';
 }
 
-function startAttemptTimer() {
-  const meta = document.getElementById('attemptMeta');
-  const btn = document.getElementById('btnSubmit');
-  const settings = QUESTIONNAIRE?.settings || {};
-  if (ATTEMPT?.remainingAttempts !== null && ATTEMPT?.remainingAttempts !== undefined) {
-    meta.style.display = 'block';
-    meta.textContent = 'Tentatives restantes après celle-ci : ' + ATTEMPT.remainingAttempts;
+async function init() {
+  show('stateError', false); show('stateLoading', true); show('stateForm', false); show('stateSuccess', false);
+  const qid = new URLSearchParams(window.location.search).get('q');
+  if (!qid) { showError('Lien invalide — aucun questionnaire spécifié.', false); return; }
+  try {
+    if (!QUESTIONNAIRE) {
+      const results = await fsQuery('questionnaires', 'qid', qid);
+      if (!results.length) { showError('Questionnaire introuvable ou expiré.', false); return; }
+      QUESTIONNAIRE = results[0];
+      try { QUESTIONNAIRE.variables = JSON.parse(QUESTIONNAIRE.variables || '[]'); } catch(e) { QUESTIONNAIRE.variables = []; }
+      if (!Array.isArray(QUESTIONNAIRE.variables)) QUESTIONNAIRE.variables = [];
+    }
+    ATTEMPT = await callSecureFunction('startAttempt', { qid });
+    renderForm();
+    startAttemptTimer();
+  } catch(e) {
+    // 403/404 = refus définitif (tentatives épuisées, questionnaire retiré) ; sinon on propose de réessayer
+    showError(e.status && e.status < 500 && e.status !== 429 ? e.message : 'Erreur de connexion : ' + (e.message || 'réseau indisponible') + '. Vérifiez votre connexion puis réessayez.', !(e.status && e.status < 500 && e.status !== 429));
   }
-  if (!ATTEMPT?.deadline) return;
+}
+
+function showError(msg, canRetry) {
+  show('stateLoading', false); show('stateForm', false);
+  show('stateError', true);
+  $('errorMsg').textContent = msg;
+  $('btnRetryLoad').style.display = canRetry ? 'block' : 'none';
+}
+
+/* ---------- Minuteur / tentatives (sans accumulation de texte) ---------- */
+function startAttemptTimer() {
+  const meta = $('attemptMeta');
+  const btn = $('btnSubmit');
+  clearInterval(ATTEMPT_TIMER);
+  const parts = [];
+  if (ATTEMPT && ATTEMPT.remainingAttempts !== null && ATTEMPT.remainingAttempts !== undefined) {
+    parts.push('Tentatives restantes après celle-ci : ' + ATTEMPT.remainingAttempts);
+  }
+  const base = parts.join(' · ');
+  if (!ATTEMPT || !ATTEMPT.deadline) {
+    meta.style.display = base ? 'block' : 'none';
+    meta.textContent = base;
+    return;
+  }
   const tick = () => {
     const left = Math.max(0, ATTEMPT.deadline - Date.now());
     const sec = Math.ceil(left / 1000);
     meta.style.display = 'block';
-    meta.textContent = (meta.textContent ? meta.textContent + ' · ' : '') + 'Temps restant : ' + Math.floor(sec/60) + ' min ' + String(sec%60).padStart(2,'0') + ' s';
-    if (!left) { clearInterval(ATTEMPT_TIMER); btn.disabled = true; meta.textContent = 'Temps écoulé — envoi impossible.'; }
+    if (!left) {
+      clearInterval(ATTEMPT_TIMER);
+      btn.disabled = true;
+      meta.textContent = 'Temps écoulé — envoi impossible.';
+      return;
+    }
+    meta.textContent = (base ? base + ' · ' : '') + 'Temps restant : ' + Math.floor(sec / 60) + ' min ' + String(sec % 60).padStart(2, '0') + ' s';
   };
-  clearInterval(ATTEMPT_TIMER); tick(); ATTEMPT_TIMER = setInterval(tick, 1000);
+  tick();
+  ATTEMPT_TIMER = setInterval(tick, 1000);
 }
 
-function showError(msg) {
-  document.getElementById('stateLoading').style.display = 'none';
-  document.getElementById('stateError').style.display = 'block';
-  document.getElementById('errorMsg').textContent = msg;
-}
-
+/* ---------- Rendu ---------- */
 function renderForm() {
-  document.getElementById('stateLoading').style.display = 'none';
-  document.getElementById('stateForm').style.display = 'block';
+  show('stateLoading', false); show('stateError', false); show('stateSuccess', false); show('stateForm', true);
   const vars = QUESTIONNAIRE.variables || [];
-  document.getElementById('formTitle').textContent = QUESTIONNAIRE.title || 'Questionnaire';
+  const rawTitle = String(QUESTIONNAIRE.title || '').trim();
+  const title = (!rawTitle || rawTitle === 'Questionnaire sans titre') ? 'Questionnaire' : rawTitle;
+  $('formTitle').textContent = title;
+  document.title = title + ' — StatAnalyse Pro';
   const obligCount = vars.filter(v => v.required !== false).length;
-  document.getElementById('formSubtitle').textContent = `${vars.length} question(s) — ${obligCount} obligatoire(s)`;
-  document.getElementById('formFields').innerHTML = vars.map((v, i) => buildField(v, i)).join('');
+  $('formSubtitle').textContent = `${vars.length} question(s) — ${obligCount} obligatoire(s)`;
+  $('formFields').innerHTML = vars.map((v, i) => buildField(v, i)).join('');
+  $('formError').style.display = 'none';
+  const btn = $('btnSubmit'); btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
+  SUBMITTING = false;
+  restoreDraft();
   updateProgress();
-  document.getElementById('formFields').querySelectorAll('input,select,textarea').forEach(el => {
-    el.addEventListener('change', updateProgress);
-    el.addEventListener('input', updateProgress);
-  });
 }
 
 function buildField(v, i) {
+  const t = normType(v);
   const req = v.required !== false;
   const reqHtml = req ? `<span class="req">*</span>` : `<span class="opt-tag">optionnel</span>`;
-  const labelHtml = `<div class="q-label"><span class="q-num">${i+1}</span><span>${v.name}${reqHtml}</span></div>`;
+  const labelHtml = `<div class="q-label"><span class="q-num">${i + 1}</span><span>${esc(v.name)}${reqHtml}</span></div>`;
+  const opts = Array.isArray(v.options) ? v.options : [];
   let inputHtml = '';
-  if (v.type === 'list') {
-    inputHtml = `<select id="field_${i}" onchange="updateProgress()"><option value="">— Sélectionner —</option>${(v.options||[]).map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
-  } else if (v.type === 'radio') {
-    inputHtml = `<div class="options-list" id="field_${i}">${(v.options||[]).map((o,oi)=>`<div class="opt-item" onclick="selectRadio(${i},${oi})"><input type="radio" name="radio_${i}" id="radio_${i}_${oi}" value="${o}"><label for="radio_${i}_${oi}">${o}</label></div>`).join('')}</div>`;
-  } else if (v.type === 'checkbox') {
-    inputHtml = `<div class="options-list" id="field_${i}">${(v.options||[]).map((o,oi)=>`<div class="opt-item" onclick="toggleCheck(this)"><input type="checkbox" id="check_${i}_${oi}" value="${o}" onchange="updateProgress()"><label for="check_${i}_${oi}">${o}</label></div>`).join('')}</div>`;
-  } else if (v.type === 'scale') {
-    inputHtml = `<div><div class="scale-row" id="field_${i}">${[1,2,3,4,5].map(n=>`<div class="scale-btn" onclick="selectScale(${i},${n})" data-val="${n}">${n}</div>`).join('')}</div><div class="scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div></div>`;
-  } else if (v.type === 'number') {
-    inputHtml = `<input type="number" id="field_${i}" placeholder="Entrez un nombre" oninput="updateProgress()">`;
-  } else if (v.type === 'date') {
-    inputHtml = `<input type="date" id="field_${i}" onchange="updateProgress()">`;
+  if (t === 'list') {
+    inputHtml = `<select id="field_${i}" data-i="${i}"><option value="">— Sélectionner —</option>${opts.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>`;
+  } else if (t === 'radio') {
+    inputHtml = `<div class="options-list" id="field_${i}">${opts.map((o, oi) => `<label class="opt-item"><input type="radio" name="radio_${i}" value="${esc(o)}" data-i="${i}"><span>${esc(o)}</span></label>`).join('')}</div>`;
+  } else if (t === 'checkbox') {
+    inputHtml = `<div class="options-list" id="field_${i}">${opts.map((o, oi) => `<label class="opt-item"><input type="checkbox" value="${esc(o)}" data-i="${i}"><span>${esc(o)}</span></label>`).join('')}</div>`;
+  } else if (t === 'scale') {
+    inputHtml = `<div><div class="scale-row" id="field_${i}">${[1,2,3,4,5].map(n => `<button type="button" class="scale-btn" data-scale="${n}" data-i="${i}">${n}</button>`).join('')}</div><div class="scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div></div>`;
+  } else if (t === 'number') {
+    inputHtml = `<input type="number" id="field_${i}" data-i="${i}" inputmode="decimal" step="any" placeholder="Entrez un nombre">`;
+  } else if (t === 'date') {
+    inputHtml = `<input type="date" id="field_${i}" data-i="${i}">`;
+  } else if (t === 'textarea') {
+    inputHtml = `<textarea id="field_${i}" data-i="${i}" rows="3" placeholder="Votre réponse…"></textarea>`;
   } else {
-    inputHtml = `<input type="text" id="field_${i}" placeholder="Votre réponse…" oninput="updateProgress()">`;
+    inputHtml = `<input type="text" id="field_${i}" data-i="${i}" autocomplete="off" placeholder="Votre réponse…">`;
   }
-  return `<div class="q-card" id="qcard_${i}">${labelHtml}${inputHtml}</div>`;
+  return `<div class="q-card" id="qcard_${i}" data-type="${t}">${labelHtml}${inputHtml}<div class="q-err">Cette question est obligatoire.</div></div>`;
 }
 
-function selectRadio(fieldIdx, optIdx) {
-  const container = document.getElementById('field_'+fieldIdx);
-  container.querySelectorAll('.opt-item').forEach(el => el.classList.remove('selected'));
-  const item = container.querySelectorAll('.opt-item')[optIdx];
-  item.classList.add('selected');
-  item.querySelector('input').checked = true;
-  updateProgress();
-}
+/* Délégation d'événements : un seul jeu d'écouteurs, aucun onclick par option */
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (!el.closest || !el.closest('#formFields')) return;
+  if (el.type === 'radio' || el.type === 'checkbox') {
+    const item = el.closest('.opt-item');
+    if (el.type === 'radio') {
+      el.closest('.options-list').querySelectorAll('.opt-item').forEach(x => x.classList.remove('selected'));
+    }
+    if (item) item.classList.toggle('selected', el.checked);
+  }
+  onFieldChanged(el);
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.closest && el.closest('#formFields') && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) onFieldChanged(el);
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.scale-btn');
+  if (!b) return;
+  const row = b.parentElement;
+  row.querySelectorAll('.scale-btn').forEach(x => x.classList.toggle('selected', x === b));
+  row.dataset.val = b.dataset.scale;
+  onFieldChanged(b);
+});
 
-function toggleCheck(item) {
-  const cb = item.querySelector('input[type=checkbox]');
-  cb.checked = !cb.checked;
-  item.classList.toggle('selected', cb.checked);
+function onFieldChanged(el) {
+  const card = el.closest && el.closest('.q-card');
+  if (card) card.classList.remove('has-error');
   updateProgress();
-}
-
-function selectScale(fieldIdx, val) {
-  const container = document.getElementById('field_'+fieldIdx);
-  container.querySelectorAll('.scale-btn').forEach(b => { b.classList.toggle('selected', parseInt(b.dataset.val) === val); });
-  container.dataset.val = val;
-  updateProgress();
+  scheduleDraftSave();
 }
 
 function getFieldValue(v, i) {
-  if (v.type === 'radio') { const c = document.querySelector(`input[name="radio_${i}"]:checked`); return c ? c.value : ''; }
-  if (v.type === 'checkbox') { const vals = [...document.querySelectorAll(`#field_${i} input[type=checkbox]:checked`)].map(c=>c.value); return vals.length ? vals.join(', ') : ''; }
-  if (v.type === 'scale') { return document.getElementById('field_'+i)?.dataset.val || ''; }
-  const el = document.getElementById('field_'+i);
+  const t = normType(v);
+  if (t === 'radio') { const c = document.querySelector(`input[name="radio_${i}"]:checked`); return c ? c.value : ''; }
+  if (t === 'checkbox') { const vals = [...document.querySelectorAll(`#field_${i} input[type=checkbox]:checked`)].map(c => c.value); return vals.length ? vals.join(', ') : ''; }
+  if (t === 'scale') { const el = $('field_' + i); return (el && el.dataset.val) || ''; }
+  const el = $('field_' + i);
   return el ? el.value.trim() : '';
 }
 
 function updateProgress() {
-  const vars = QUESTIONNAIRE?.variables || [];
+  const vars = (QUESTIONNAIRE && QUESTIONNAIRE.variables) || [];
   let filled = 0;
   vars.forEach((v, i) => { if (getFieldValue(v, i)) filled++; });
   const pct = vars.length ? Math.round(filled / vars.length * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
+  $('progressFill').style.width = pct + '%';
+  $('progressTxt').textContent = filled + ' / ' + vars.length + ' question(s)';
+  $('progressPct').textContent = pct + ' %';
+}
+
+/* ---------- Brouillon local (survit à un rechargement / coupure réseau) ---------- */
+function draftKey() { return 'sa_draft_' + (QUESTIONNAIRE && QUESTIONNAIRE.qid || ''); }
+function draftSignature() { return (QUESTIONNAIRE.variables || []).map(v => v.name).join('|').length + ':' + (QUESTIONNAIRE.variables || []).length; }
+function scheduleDraftSave() {
+  clearTimeout(DRAFT_TIMER);
+  DRAFT_TIMER = setTimeout(saveDraft, 400);
+}
+function saveDraft() {
+  try {
+    const vars = QUESTIONNAIRE.variables || [];
+    const vals = vars.map((v, i) => getFieldValue(v, i));
+    if (!vals.some(Boolean)) { localStorage.removeItem(draftKey()); return; }
+    localStorage.setItem(draftKey(), JSON.stringify({ sig: draftSignature(), vals, t: Date.now() }));
+  } catch (e) { /* stockage indisponible : on ignore */ }
+}
+function clearDraft() { try { localStorage.removeItem(draftKey()); } catch (e) {} }
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem(draftKey());
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (!d || d.sig !== draftSignature() || !Array.isArray(d.vals)) return;
+    if (Date.now() - (d.t || 0) > 7 * 24 * 3600 * 1000) { clearDraft(); return; }
+    const vars = QUESTIONNAIRE.variables || [];
+    vars.forEach((v, i) => {
+      const val = d.vals[i];
+      if (!val) return;
+      const t = normType(v);
+      if (t === 'radio') {
+        const r = [...document.querySelectorAll(`input[name="radio_${i}"]`)].find(x => x.value === val);
+        if (r) { r.checked = true; r.closest('.opt-item').classList.add('selected'); }
+      } else if (t === 'checkbox') {
+        const set = new Set(String(val).split(', '));
+        document.querySelectorAll(`#field_${i} input[type=checkbox]`).forEach(c => { if (set.has(c.value)) { c.checked = true; c.closest('.opt-item').classList.add('selected'); } });
+      } else if (t === 'scale') {
+        const row = $('field_' + i);
+        if (row) { row.dataset.val = val; row.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', b.dataset.scale === String(val))); }
+      } else {
+        const el = $('field_' + i); if (el) el.value = val;
+      }
+    });
+    $('draftNote').textContent = '💾 Vos réponses précédentes ont été restaurées.';
+  } catch (e) { /* brouillon illisible : ignoré */ }
+}
+
+/* ---------- Envoi (idempotent côté serveur : on peut réessayer sans doublon) ---------- */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function sendWithRetry(payload) {
+  let lastErr;
+  for (let k = 0; k < 3; k++) {
+    try { return await callSecureFunction('submitAttempt', payload); }
+    catch (e) {
+      lastErr = e;
+      const definitive = e.status && e.status < 500 && e.status !== 429;
+      if (definitive) throw e;
+      await sleep(1200 * (k + 1));
+    }
+  }
+  throw lastErr;
 }
 
 async function submitResponse() {
+  if (SUBMITTING) return;
   const vars = QUESTIONNAIRE.variables || [];
   const data = {};
-  let firstEmpty = -1;
+  const missing = [];
   vars.forEach((v, i) => {
     const val = getFieldValue(v, i);
     data[v.name] = val;
-    if (v.required !== false && !val && firstEmpty === -1) firstEmpty = i;
+    if (v.required !== false && !val) missing.push(i);
   });
-  const errEl = document.getElementById('formError');
-  if (firstEmpty !== -1) {
+  const errEl = $('formError');
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
+  if (missing.length) {
+    missing.forEach(i => $('qcard_' + i).classList.add('has-error'));
     errEl.style.display = 'block';
-    errEl.textContent = '⚠️ Veuillez remplir tous les champs obligatoires (marqués *).';
-    document.getElementById('qcard_'+firstEmpty).classList.add('has-error');
-    document.getElementById('qcard_'+firstEmpty).scrollIntoView({ behavior:'smooth', block:'center' });
+    errEl.textContent = `⚠️ ${missing.length} question(s) obligatoire(s) sans réponse (marquées en rouge).`;
+    $('qcard_' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
     return;
   }
   errEl.style.display = 'none';
-  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
-  const btn = document.getElementById('btnSubmit');
-  btn.disabled = true; btn.textContent = '⏳ Envoi en cours...';
+  const btn = $('btnSubmit');
+  SUBMITTING = true; btn.disabled = true; btn.textContent = '⏳ Envoi en cours...';
   try {
-    if (!ATTEMPT?.attemptId) throw new Error('Tentative non initialisée');
-    await callSecureFunction('submitAttempt', { qid: QUESTIONNAIRE.qid, attemptId: ATTEMPT.attemptId, data });
+    if (!ATTEMPT || !ATTEMPT.attemptId) throw new HttpError('Tentative non initialisée. Rechargez la page.', 400);
+    const res = await sendWithRetry({ qid: QUESTIONNAIRE.qid, attemptId: ATTEMPT.attemptId, data });
     clearInterval(ATTEMPT_TIMER);
-    document.getElementById('stateForm').style.display = 'none';
-    document.getElementById('stateSuccess').style.display = 'block';
+    clearDraft();
+    showSuccess(res);
   } catch(e) {
     errEl.style.display = 'block';
-    errEl.textContent = '❌ Erreur envoi : ' + e.message;
-    btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
+    errEl.textContent = '❌ Envoi impossible : ' + (e.message || 'erreur réseau') + (e.status && e.status < 500 ? '' : ' — vos réponses sont conservées, réessayez.');
+    SUBMITTING = false; btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
   }
 }
 
-function repondreEncore() {
-  document.getElementById('stateSuccess').style.display = 'none';
-  document.getElementById('stateForm').style.display = 'block';
-  renderForm();
-  document.getElementById('btnSubmit').disabled = false;
-  document.getElementById('btnSubmit').textContent = '✅ Envoyer mes réponses';
+function showSuccess(res) {
+  show('stateForm', false); show('stateSuccess', true);
+  $('againError').style.display = 'none';
+  const rc = $('receipt');
+  const id = res && res.responseId ? String(res.responseId).slice(-8).toUpperCase() : '';
+  const when = new Date(res && res.createdAt ? res.createdAt : Date.now());
+  rc.innerHTML = (id ? `Référence : <b>${esc(id)}</b> · ` : '') + esc(when.toLocaleString('fr-FR', { dateStyle:'short', timeStyle:'short' }));
+  rc.style.display = 'inline-block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* « Remplir à nouveau » : nouvelle tentative serveur (l'ancienne est consommée) */
+async function repondreEncore() {
+  const btn = $('btnAgain'), err = $('againError');
+  btn.disabled = true; btn.textContent = '⏳ Préparation...'; err.style.display = 'none';
+  try {
+    ATTEMPT = await callSecureFunction('startAttempt', { qid: QUESTIONNAIRE.qid });
+    renderForm();
+    startAttemptTimer();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    err.style.display = 'block';
+    err.textContent = e.message || 'Impossible de démarrer une nouvelle réponse.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Remplir à nouveau';
+  }
 }
 
 init();
