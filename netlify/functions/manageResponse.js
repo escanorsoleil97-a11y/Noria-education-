@@ -55,8 +55,8 @@ exports.handler = async (event) => {
   const responseId = body?.responseId;
   const data = body?.data;
 
-  if (!['list', 'count', 'update', 'delete'].includes(action)) {
-    return response(400, { error: 'action invalide (list|count|update|delete)' }, origin);
+  if (!['list', 'update', 'delete'].includes(action)) {
+    return response(400, { error: 'action invalide (list|update|delete)' }, origin);
   }
   if (typeof adminToken !== 'string' || adminToken.length < 16 || adminToken.length > 256) {
     return response(401, { error: 'Token admin invalide' }, origin);
@@ -66,13 +66,6 @@ exports.handler = async (event) => {
     const qid = await resolveQidFromToken(adminToken);
     if (!qid) return response(403, { error: 'Token admin invalide.' }, origin);
 
-    // Comptage léger (une seule lecture agrégée) : permet au tableau de bord de
-    // détecter les nouvelles réponses sans recharger la page ni tout relire.
-    if (action === 'count') {
-      const agg = await db.collection('responses').where('questionnaire_id', '==', qid).count().get();
-      return response(200, { ok: true, qid, count: agg.data().count }, origin);
-    }
-
     if (action === 'list') {
       const qSnap = await db.collection('questionnaires').doc(qid).get();
       if (!qSnap.exists) return response(404, { error: 'Questionnaire introuvable.' }, origin);
@@ -81,10 +74,9 @@ exports.handler = async (event) => {
         .where('questionnaire_id', '==', qid)
         .limit(5000)
         .get();
-      const responses = respSnap.docs.map(d => ({ _id: d.id, ...d.data() }))
-        .sort((a, b) => String(a.created_at || '').localeCompare(String(b.created_at || '')));
+      const responses = respSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
       return response(200, {
-        ok: true, qid, title: qData.title, variables: qData.variables, created_at: qData.created_at || null, responses,
+        ok: true, qid, title: qData.title, variables: qData.variables, responses,
       }, origin);
     }
 

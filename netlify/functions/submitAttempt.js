@@ -72,7 +72,20 @@ exports.handler = async (event) => {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'data invalide' }) };
   }
-  const serialized = JSON.stringify(data);
+  // Défense en profondeur (XSS stocké) : les réponses sont relues par le propriétaire
+  // dans son tableau de bord. Un début de balise HTML (<a, </x, <!, <?) est remplacé
+  // par le chevron pleine chasse ＜ ; « <5 ans » ou « < 18 » restent inchangés.
+  const _neutral = (v) => {
+    if (typeof v === 'string') return v.replace(/<(?=[A-Za-z\/!?])/g, '\uFF1C');
+    if (Array.isArray(v)) return v.map(_neutral);
+    if (v && typeof v === 'object') {
+      const o = {};
+      for (const k of Object.keys(v)) o[_neutral(k)] = _neutral(v[k]);
+      return o;
+    }
+    return v;
+  };
+  const serialized = JSON.stringify(_neutral(data));
   if (serialized.length > MAX_DATA_BYTES) {
     return { statusCode: 413, headers, body: JSON.stringify({ error: 'Réponse trop volumineuse.' }) };
   }
@@ -80,23 +93,10 @@ exports.handler = async (event) => {
   try {
     const attemptRef = db.collection('attempts').doc(attemptId);
 
-    // Le questionnaire est lu AVANT la transaction : si il n'existe plus, on
-    // n'a pas "consommé" la tentative pour rien.
-    const qSnap = await db.collection('questionnaires').doc(qid).get();
-    if (!qSnap.exists) {
-      return { statusCode: 404, headers, body: JSON.stringify({ error: 'Questionnaire introuvable.' }) };
-    }
-    const qData = qSnap.data();
-
-    // Identifiant de la réponse fixé à l'avance : la transaction écrit en UNE
-    // seule opération atomique (tentative marquée utilisée + réponse créée).
-    // → plus de réponse perdue si l'écriture échoue après l'invalidation du
-    //   jeton, et un renvoi (double clic, réseau coupé puis rétabli) renvoie
-    //   le même accusé de réception au lieu d'une erreur 409.
-    const respRef = db.collection('responses').doc();
-    const createdAt = new Date().toISOString();
-
-    const result = await db.runTransaction(async (tx) => {
+    // Transaction : lecture + invalidation du jeton en une seule opération
+    // atomique pour empêcher deux requêtes simultanées de passer toutes les
+    // deux (double-soumission / rejeu du même attemptId).
+    const attemptData = await db.runTransaction(async (tx) => {
       const snap = await tx.get(attemptRef);
       if (!snap.exists) {
         const e = new Error('Tentative introuvable ou expirée.');
@@ -110,7 +110,6 @@ exports.handler = async (event) => {
         throw e;
       }
       if (a.used) {
-        if (a.responseId) return { responseId: a.responseId, createdAt: a.usedAtIso || null, duplicate: true };
         const e = new Error('Cette tentative a déjà été soumise.');
         e.status = 409;
         throw e;
@@ -120,18 +119,26 @@ exports.handler = async (event) => {
         e.status = 410;
         throw e;
       }
-      tx.set(respRef, {
-        questionnaire_id: qid,
-        owner_uid: qData.owner_uid || a.ownerUid || null,
-        data: serialized,
-        created_at: createdAt,
-        attemptId,
-      });
-      tx.update(attemptRef, { used: true, usedAt: Date.now(), usedAtIso: createdAt, responseId: respRef.id });
-      return { responseId: respRef.id, createdAt, duplicate: false };
+      tx.update(attemptRef, { used: true, usedAt: Date.now() });
+      return a;
     });
 
-    return { statusCode: 200, headers, body: JSON.stringify({ ok: true, responseId: result.responseId, createdAt: result.createdAt, duplicate: !!result.duplicate }) };
+    const qSnap = await db.collection('questionnaires').doc(qid).get();
+    if (!qSnap.exists) {
+      return { statusCode: 404, headers, body: JSON.stringify({ error: 'Questionnaire introuvable.' }) };
+    }
+    const qData = qSnap.data();
+
+    const respRef = db.collection('responses').doc();
+    await respRef.set({
+      questionnaire_id: qid,
+      owner_uid: qData.owner_uid || attemptData.ownerUid || null,
+      data: serialized,
+      created_at: new Date().toISOString(),
+      attemptId,
+    });
+
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   } catch (e) {
     if (e.status) return { statusCode: e.status, headers, body: JSON.stringify({ error: e.message }) };
     console.error('submitAttempt:', e);

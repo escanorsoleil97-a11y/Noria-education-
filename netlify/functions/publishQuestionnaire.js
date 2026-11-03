@@ -51,27 +51,6 @@ const _origin = (event.headers && (event.headers.origin || event.headers.Origin)
 
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch { return { statusCode: 400, headers, body: JSON.stringify({ error: 'JSON invalide' }) }; }
-  // Action "list" : retrouve TOUS les questionnaires publiés par ce compte
-  // (lien + token admin), sur n'importe quel appareil ou navigateur.
-  if (body.action === 'list') {
-    try {
-      const qs = await db.collection('questionnaires').where('owner_uid', '==', uid).limit(200).get();
-      const refs = qs.docs.map(d => db.collection('questionnaire_admin').doc(d.id));
-      const adm = refs.length ? await db.getAll(...refs) : [];
-      const tokens = {};
-      adm.forEach(a => { if (a.exists) tokens[a.id] = a.data().admin_token; });
-      const items = qs.docs.map(d => {
-        const q = d.data();
-        let n = 0;
-        try { n = JSON.parse(q.variables || '[]').length; } catch (e) {}
-        return { qid: d.id, title: q.title || 'Questionnaire', created_at: q.created_at || '', nVars: n, adminToken: tokens[d.id] || '', isVisible: !(q.settings && q.settings.isVisible === false) };
-      }).filter(x => x.adminToken).sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
-      return { statusCode: 200, headers, body: JSON.stringify({ ok: true, items }) };
-    } catch (e) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: e.message || 'Erreur serveur.' }) };
-    }
-  }
-
   const { title, variables } = body;
   const maxAttemptsRaw = Number(body.maxAttempts);
   const timeLimitRaw = Number(body.timeLimitSeconds);

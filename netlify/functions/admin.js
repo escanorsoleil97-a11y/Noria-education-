@@ -35,7 +35,8 @@ async function verifyAdmin(token) {
     throw new Error('Session invalide ou expirée (' + (e.code || e.message) + '). Rouvrez Admin depuis Noria Education.');
   }
   if (!ADMIN_UIDS.has(decoded.uid)) {
-    throw new Error('UID non autorisé : ' + decoded.uid + '. Ajoutez cet UID dans la variable Netlify ADMIN_UIDS puis redéployez.');
+    console.error('admin: UID non autorisé ' + decoded.uid + ' — à ajouter dans ADMIN_UIDS si légitime.');
+    throw new Error('Accès refusé.');
   }
   const snap = await db.collection('users').doc(decoded.uid).get();
   const role = String(snap.data()?.role || '').trim().toLowerCase();

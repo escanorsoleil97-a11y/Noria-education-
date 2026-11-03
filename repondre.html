@@ -2,128 +2,138 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Questionnaire — StatAnalyse Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="robots" content="noindex">
+<title>Questionnaire — Noria Statistique</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#04080f;--surface:#0b1220;--surface2:#111d30;--border:rgba(255,255,255,.07);--accent:#00d4aa;--text:#e2e8f0;--muted:#4a6380;--muted2:#7d93ad;--card:#0d1828;--danger:#f43f5e;}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f0f7ff;--surface:#ffffff;--surface2:#eef4fc;--border:#c7d7ea;--accent:#2563eb;--accent2:#1d4ed8;--accent-soft:rgba(37,99,235,.10);--text:#0f172a;--muted:#64748b;--card:#ffffff;--err:#e11d48;--ok:#059669;--shadow:0 6px 22px rgba(15,23,42,.08)}
+@media (prefers-color-scheme:dark){:root{--bg:#060b16;--surface:#0e1626;--surface2:#142036;--border:rgba(255,255,255,.10);--accent:#60a5fa;--accent2:#3b82f6;--accent-soft:rgba(96,165,250,.14);--text:#e8eef8;--muted:#8aa0bd;--card:#0b1322;--err:#fb7185;--ok:#34d399;--shadow:0 6px 22px rgba(0,0,0,.35)}}
+*{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:16px 16px 40px}
-.container{width:100%;max-width:620px}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;text-align:center;margin:6px 0 18px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;padding:0 14px calc(28px + env(safe-area-inset-bottom));line-height:1.45}
+.grecaptcha-badge{visibility:hidden!important}
+.container{width:100%;max-width:680px;margin:0 auto}
+.topbar{position:sticky;top:0;z-index:20;margin:0 -14px 14px;padding:10px 14px 8px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.topbar-in{max-width:680px;margin:0 auto}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
 .logo span{color:var(--accent)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:14px}
-.q-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);margin-bottom:4px;overflow-wrap:anywhere}
-.q-subtitle{font-size:.82rem;color:var(--muted2);margin-bottom:14px}
-.attempt-meta{font-size:.8rem;color:#fbbf24;margin:-6px 0 12px;display:none}
-.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;transition:border-color .2s}
-.q-card.has-error{border-color:rgba(244,63,94,.6)}
-.q-card .q-err{display:none;color:#fb7185;font-size:.74rem;margin-top:8px}
+.prog-row{display:flex;align-items:center;gap:10px;margin-top:7px;font-size:.74rem;color:var(--muted);font-weight:600}
+.progress-bar{flex:1;height:7px;background:var(--surface2);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#22c55e);border-radius:99px;transition:width .35s ease}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.q-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;line-height:1.25;color:var(--text);margin-bottom:6px}
+.q-subtitle{font-size:.84rem;color:var(--muted);margin-bottom:4px}
+.q-meta{display:inline-flex;margin-top:8px;padding:5px 10px;border-radius:99px;background:rgba(245,158,11,.14);color:#b45309;font-size:.76rem;font-weight:700}
+@media (prefers-color-scheme:dark){.q-meta{color:#fbbf24}}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--accent-soft);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:.8rem;margin-bottom:14px}
+.banner button{background:none;border:0;color:var(--accent);font-weight:700;font-size:.8rem;cursor:pointer;padding:4px 6px}
+.q-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow)}
+.q-card[hidden]{display:none}
+.q-card.has-error{border-color:var(--err);box-shadow:0 0 0 3px rgba(225,29,72,.10)}
+.q-card.done{border-color:color-mix(in srgb,var(--ok) 45%,var(--border))}
+.q-label{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:flex-start;gap:9px;line-height:1.4}
+.q-num{min-width:26px;height:26px;background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;font-size:.74rem;font-weight:800;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.req{color:var(--err);margin-left:3px}
+.opt-tag{font-size:.64rem;color:var(--muted);border:1px solid var(--border);border-radius:99px;padding:1px 7px;margin-left:6px;font-weight:600}
+.q-err{display:none;color:var(--err);font-size:.76rem;font-weight:600;margin-top:8px}
 .q-card.has-error .q-err{display:block}
-.q-label{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:flex-start;gap:8px;line-height:1.4}
-.q-label>span:last-child{overflow-wrap:anywhere}
-.q-num{min-width:24px;height:24px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.2);border-radius:5px;font-size:.7rem;font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0}
-.req{color:var(--danger);margin-left:3px}
-.opt-tag{font-size:.62rem;color:var(--muted2);border:1px solid var(--border);border-radius:3px;padding:1px 5px;margin-left:6px;white-space:nowrap}
-input[type=text],input[type=number],input[type=date],select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px;width:100%;font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s;min-height:46px;appearance:none;-webkit-appearance:none}
-select{background-image:linear-gradient(45deg,transparent 50%,var(--muted2) 50%),linear-gradient(135deg,var(--muted2) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:36px}
-select option{background:#111d30;color:#e2e8f0}
-input[type=date]{color-scheme:dark}
-input:focus,select:focus,textarea:focus{border-color:rgba(0,212,170,.5)}
+input[type=text],input[type=number],input[type=date],select,textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:12px 13px;width:100%;font-family:inherit;font-size:1rem;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 input::placeholder,textarea::placeholder{color:var(--muted)}
 .options-list{display:flex;flex-direction:column;gap:8px}
-.opt-item{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .15s;min-height:46px}
-.opt-item:hover{border-color:rgba(0,212,170,.3);background:rgba(0,212,170,.04)}
-.opt-item.selected{border-color:rgba(0,212,170,.5);background:rgba(0,212,170,.08)}
-.opt-item input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;cursor:pointer;margin:0}
-.opt-item span{font-size:.88rem;flex:1;overflow-wrap:anywhere}
+.opt-item{display:flex;align-items:center;gap:11px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 13px;cursor:pointer;transition:all .15s;min-height:46px}
+.opt-item:hover{border-color:var(--accent)}
+.opt-item.selected{border-color:var(--accent);background:var(--accent-soft)}
+.opt-item input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.opt-item label{font-size:.92rem;cursor:pointer;flex:1}
 .scale-row{display:flex;gap:8px}
-.scale-btn{flex:1;min-width:0;padding:12px 4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-weight:700;font-size:.95rem;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit}
-.scale-btn:hover{border-color:rgba(0,212,170,.4)}
-.scale-btn.selected{background:rgba(0,212,170,.15);border-color:var(--accent);color:var(--accent)}
-.scale-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted2);margin-top:6px;padding:0 2px}
-.progress-wrap{position:sticky;top:0;z-index:5;background:var(--card);padding:8px 0 10px;margin:0 0 10px}
-.progress-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#3b82f6);transition:width .35s ease;border-radius:2px;width:0}
-.progress-txt{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted2);margin-top:5px}
-.btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),rgba(0,212,170,.8));color:#000;font-weight:800;font-size:.95rem;font-family:'Syne',sans-serif;border:none;border-radius:9px;cursor:pointer;margin-top:8px;box-shadow:0 8px 24px rgba(0,212,170,.2);transition:all .2s}
-.btn-submit:active{transform:scale(.98)}
-.btn-submit:disabled{opacity:.5;cursor:not-allowed}
-.btn-again{width:100%;padding:13px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-weight:600;font-size:.88rem;border-radius:9px;cursor:pointer;margin-top:14px}
-.btn-again:disabled{opacity:.5}
-.loading{text-align:center;padding:50px 20px;color:var(--muted2)}
-.spinner{display:inline-block;width:30px;height:30px;border:3px solid rgba(0,212,170,.15);border-radius:50%;border-top-color:var(--accent);animation:spin 1s linear infinite;margin-bottom:14px}
+.scale-btn{flex:1;min-width:0;padding:13px 4px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-weight:800;font-size:1rem;cursor:pointer;text-align:center;transition:all .15s}
+.scale-btn:hover{border-color:var(--accent)}
+.scale-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+.scale-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:6px}
+.nav-row{display:flex;gap:10px;margin-top:14px}
+.btn{flex:1;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text);transition:transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(37,99,235,.28)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn[hidden]{display:none}
+.page-ind{text-align:center;font-size:.74rem;color:var(--muted);margin-top:10px;font-weight:600}
+.loading{text-align:center;padding:50px 20px;color:var(--muted)}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--accent-soft);border-radius:50%;border-top-color:var(--accent);animation:spin 1s ease-in-out infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.error-box{padding:11px 14px;background:rgba(244,63,94,.1);border-left:3px solid var(--danger);border-radius:6px;font-size:.84rem;color:#fb7185;margin:10px 0;overflow-wrap:anywhere}
-.draft-note{font-size:.72rem;color:var(--muted2);text-align:center;margin-top:10px}
-.success-wrap{text-align:center;padding:36px 20px}
-.success-icon{font-size:3rem;margin-bottom:14px}
-.success-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent);margin-bottom:8px}
-.success-sub{font-size:.88rem;color:var(--muted2);line-height:1.5}
-.receipt{display:inline-block;margin-top:16px;padding:10px 16px;border:1px dashed rgba(0,212,170,.4);border-radius:8px;background:rgba(0,212,170,.06);font-size:.8rem;color:var(--text)}
-.receipt b{color:var(--accent);letter-spacing:1px}
+.error-box{padding:12px 14px;background:rgba(225,29,72,.08);border-left:4px solid var(--err);border-radius:8px;font-size:.86rem;color:var(--err);margin:10px 0;font-weight:600}
+.success-wrap{text-align:center;padding:30px 18px}
+.success-icon{width:66px;height:66px;margin:0 auto 14px;border-radius:50%;background:rgba(5,150,105,.14);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.success-title{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;margin-bottom:6px}
+.success-sub{font-size:.88rem;color:var(--muted)}
+details.recap{text-align:left;margin-top:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface2)}
+details.recap summary{cursor:pointer;padding:12px 14px;font-weight:700;font-size:.88rem}
+.recap-list{padding:0 14px 12px;font-size:.84rem}
+.recap-item{padding:8px 0;border-top:1px solid var(--border)}
+.recap-q{color:var(--muted);font-size:.76rem}
+.recap-a{font-weight:600;word-break:break-word}
+.success-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.foot{font-size:.68rem;color:var(--muted);text-align:center;margin-top:18px;line-height:1.6}
+.foot a{color:var(--muted)}
+@media print{body{background:#fff;color:#000;padding:0}.topbar,.foot,.success-actions,#stateForm,#stateLoading,#stateError{display:none!important}.card{box-shadow:none;border:0}details.recap{border:0}details.recap summary{display:none}details.recap>*{display:block}}
 </style>
 <script src="https://www.google.com/recaptcha/api.js?render=6Lf4HIstAAAAAJI9u9RvcbWm5sk_42rwEgpT6ADZ"></script>
 </head>
 <body>
+<div class="topbar"><div class="topbar-in">
+  <div class="logo">Noria<span> Statistique</span></div>
+  <div class="prog-row" id="progRow" style="display:none"><div class="progress-bar" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div><span id="progText">0 / 0</span></div>
+</div></div>
 <div class="container">
-  <div class="logo">Stat<span>Analyse</span> Pro</div>
-
-  <div id="stateLoading" class="card loading">
-    <div class="spinner"></div>
-    <p>Chargement du questionnaire...</p>
-  </div>
-
-  <div id="stateError" class="card" style="display:none">
-    <div class="error-box" id="errorMsg">Questionnaire introuvable.</div>
-    <button class="btn-again" id="btnRetryLoad" onclick="init()">🔄 Réessayer</button>
-  </div>
-
+  <div id="stateLoading" class="card loading"><div class="spinner"></div><p>Chargement du questionnaire…</p></div>
+  <div id="stateError" class="card" style="display:none"><div class="error-box" id="errorMsg">Questionnaire introuvable.</div></div>
   <div id="stateForm" style="display:none">
     <div class="card">
-      <div class="q-title" id="formTitle"></div>
+      <h1 class="q-title" id="formTitle"></h1>
       <div class="q-subtitle" id="formSubtitle"></div>
-      <div id="attemptMeta" class="attempt-meta"></div>
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-txt"><span id="progressTxt">0 / 0</span><span id="progressPct">0 %</span></div>
-      </div>
-      <div id="formFields"></div>
-      <div id="formError" class="error-box" style="display:none"></div>
-      <button class="btn-submit" id="btnSubmit" type="button" onclick="submitResponse()">✅ Envoyer mes réponses</button>
-      <div class="draft-note" id="draftNote">💾 Vos réponses sont sauvegardées automatiquement sur cet appareil.</div>
+      <div id="attemptMeta" class="q-meta" style="display:none"></div>
+    </div>
+    <div id="draftBanner" class="banner" style="display:none"><span>💾 Vos réponses précédentes ont été restaurées.</span><button type="button" onclick="clearDraft(true)">Tout effacer</button></div>
+    <div id="formFields"></div>
+    <div id="formError" class="error-box" style="display:none" role="alert"></div>
+    <div class="nav-row">
+      <button type="button" class="btn" id="btnPrev" onclick="goPrev()" hidden>← Précédent</button>
+      <button type="button" class="btn btn-primary" id="btnNext" onclick="goNext()">Suivant →</button>
+      <button type="button" class="btn btn-primary" id="btnSubmit" onclick="submitResponse()" hidden>✅ Envoyer mes réponses</button>
+    </div>
+    <div class="page-ind" id="pageInd"></div>
+  </div>
+  <div id="stateSuccess" class="card success-wrap" style="display:none">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Réponse envoyée !</div>
+    <p class="success-sub">Merci pour votre participation.</p>
+    <details class="recap" id="recapBox"><summary>👁️ Revoir mes réponses</summary><div class="recap-list" id="recapList"></div></details>
+    <div class="success-actions">
+      <button type="button" class="btn" onclick="window.print()">🖨️ Enregistrer mes réponses (PDF)</button>
+      <button type="button" class="btn" id="btnAgain" onclick="repondreEncore()">Remplir à nouveau</button>
     </div>
   </div>
-
-  <div id="stateSuccess" class="card success-wrap" style="display:none">
-    <div class="success-icon">🎉</div>
-    <div class="success-title">Réponse enregistrée !</div>
-    <p class="success-sub">Merci pour votre participation. Votre réponse a bien été reçue.</p>
-    <div class="receipt" id="receipt" style="display:none"></div>
-    <div id="againError" class="error-box" style="display:none;text-align:left"></div>
-    <button class="btn-again" id="btnAgain" type="button" onclick="repondreEncore()">Remplir à nouveau</button>
-  </div>
+  <p class="foot">Propulsé par Noria Statistique · Ce site est protégé par reCAPTCHA :
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Confidentialité</a> ·
+    <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Conditions</a></p>
 </div>
 
 <script>
 const FS_PROJECT = 'statanalyse-pro';
 const RECAPTCHA_SITE_KEY = '6Lf4HIstAAAAAJI9u9RvcbWm5sk_42rwEgpT6ADZ';
 const FS_API_KEY = 'AIzaSyA3pT5-TNZTiOUz3AeMRUBdblucyp0EWSI';
+
 let QUESTIONNAIRE = null;
 let ATTEMPT = null;
 let ATTEMPT_TIMER = null;
-let SUBMITTING = false;
-let DRAFT_TIMER = null;
+let PAGE = 0, PAGE_SIZE = 8, SAVE_T = null;
 
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
-function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-}
-function show(id, on) { const el = $(id); if (el) el.style.display = on ? 'block' : 'none'; }
 
-/* ---------- Conversion Firestore REST <-> objets ---------- */
 function fsToObj(doc) {
   const out = { _id: doc.name.split('/').pop() };
   for (const [k, v] of Object.entries(doc.fields || {})) {
@@ -136,7 +146,18 @@ function fsToObj(doc) {
   return out;
 }
 
-/* ---------- App Check (échec silencieux : ne bloque jamais le formulaire) ---------- */
+function objToFs(obj) {
+  const fields = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (Array.isArray(v)) fields[k] = { arrayValue: { values: v.map(i => ({ stringValue: String(i) })) } };
+    else if (typeof v === 'object' && v !== null) fields[k] = { mapValue: { fields: objToFs(v) } };
+    else if (typeof v === 'number') fields[k] = { integerValue: String(v) };
+    else if (typeof v === 'boolean') fields[k] = { booleanValue: v };
+    else fields[k] = { stringValue: String(v ?? '') };
+  }
+  return fields;
+}
+
 let _appCheckPromise = null;
 async function getAppCheckToken() {
   try {
@@ -166,7 +187,6 @@ async function getAppCheckToken() {
     return result && result.token ? result.token : null;
   } catch (e) {
     console.warn('App Check token indisponible', e);
-    _appCheckPromise = null; // permettra une nouvelle tentative au prochain appel
     return null;
   }
 }
@@ -186,7 +206,15 @@ async function fsQuery(col, field, value) {
   return data.filter(d => d.document).map(d => fsToObj(d.document));
 }
 
-class HttpError extends Error { constructor(msg, status) { super(msg); this.status = status; } }
+async function fsAdd(col, obj) {
+  const appCheckToken = await getAppCheckToken();
+  const res = await fetch(
+    `https://firestore.googleapis.com/v1/projects/${FS_PROJECT}/databases/(default)/documents/${col}?key=${FS_API_KEY}`,
+    { method:'POST', headers:{'Content-Type':'application/json', ...(appCheckToken ? {'X-Firebase-AppCheck': appCheckToken} : {})}, body: JSON.stringify({ fields: objToFs(obj) }) }
+  );
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}
 
 async function callSecureFunction(name, body) {
   const appCheckToken = await getAppCheckToken();
@@ -194,302 +222,263 @@ async function callSecureFunction(name, body) {
   if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
   const res = await fetch('/.netlify/functions/' + name, { method:'POST', headers, body:JSON.stringify(body) });
   const payload = await res.json().catch(() => ({}));
-  if (!res.ok) throw new HttpError(payload.message || payload.error || 'Erreur serveur', res.status);
+  if (!res.ok) throw new Error(payload.message || payload.error || 'Erreur serveur');
   return payload;
 }
 
-/* ---------- Types de questions (tolère les anciens / importés) ---------- */
-function normType(v) {
-  const t = String(v.type || '').toLowerCase().trim();
-  const hasOpts = Array.isArray(v.options) && v.options.length > 0;
-  if (['list','select','select_one','dropdown','liste'].includes(t)) return 'list';
-  if (['radio','choice','single','choix'].includes(t)) return 'radio';
-  if (['checkbox','multiple','select_multiple','multi'].includes(t)) return 'checkbox';
-  if (['scale','likert','echelle','échelle'].includes(t)) return 'scale';
-  if (['number','integer','decimal','numeric','num','nombre'].includes(t)) return 'number';
-  if (t === 'date') return 'date';
-  if (['textarea','longtext'].includes(t)) return 'textarea';
-  if (hasOpts) return 'radio'; // des modalités existent : on propose un choix plutôt qu'un champ vide
-  return 'text';
-}
 
 async function init() {
-  show('stateError', false); show('stateLoading', true); show('stateForm', false); show('stateSuccess', false);
   const qid = new URLSearchParams(window.location.search).get('q');
-  if (!qid) { showError('Lien invalide — aucun questionnaire spécifié.', false); return; }
+  if (!qid) { showError('Lien invalide — aucun questionnaire spécifié.'); return; }
   try {
-    if (!QUESTIONNAIRE) {
-      const results = await fsQuery('questionnaires', 'qid', qid);
-      if (!results.length) { showError('Questionnaire introuvable ou expiré.', false); return; }
-      QUESTIONNAIRE = results[0];
-      try { QUESTIONNAIRE.variables = JSON.parse(QUESTIONNAIRE.variables || '[]'); } catch(e) { QUESTIONNAIRE.variables = []; }
-      if (!Array.isArray(QUESTIONNAIRE.variables)) QUESTIONNAIRE.variables = [];
-    }
+    const results = await fsQuery('questionnaires', 'qid', qid);
+    if (!results.length) { showError('Questionnaire introuvable ou expiré.'); return; }
+    QUESTIONNAIRE = results[0];
+    try { QUESTIONNAIRE.variables = JSON.parse(QUESTIONNAIRE.variables || '[]'); } catch(e) { QUESTIONNAIRE.variables = []; }
+    if (!Array.isArray(QUESTIONNAIRE.variables)) QUESTIONNAIRE.variables = [];
     ATTEMPT = await callSecureFunction('startAttempt', { qid });
     renderForm();
     startAttemptTimer();
-  } catch(e) {
-    // 403/404 = refus définitif (tentatives épuisées, questionnaire retiré) ; sinon on propose de réessayer
-    showError(e.status && e.status < 500 && e.status !== 429 ? e.message : 'Erreur de connexion : ' + (e.message || 'réseau indisponible') + '. Vérifiez votre connexion puis réessayez.', !(e.status && e.status < 500 && e.status !== 429));
-  }
+  } catch(e) { showError('Erreur de connexion : ' + e.message); }
 }
 
-function showError(msg, canRetry) {
-  show('stateLoading', false); show('stateForm', false);
-  show('stateError', true);
-  $('errorMsg').textContent = msg;
-  $('btnRetryLoad').style.display = canRetry ? 'block' : 'none';
-}
-
-/* ---------- Minuteur / tentatives (sans accumulation de texte) ---------- */
 function startAttemptTimer() {
   const meta = $('attemptMeta');
   const btn = $('btnSubmit');
   clearInterval(ATTEMPT_TIMER);
-  const parts = [];
-  if (ATTEMPT && ATTEMPT.remainingAttempts !== null && ATTEMPT.remainingAttempts !== undefined) {
-    parts.push('Tentatives restantes après celle-ci : ' + ATTEMPT.remainingAttempts);
-  }
-  const base = parts.join(' · ');
+  const hasAtt = ATTEMPT && ATTEMPT.remainingAttempts !== null && ATTEMPT.remainingAttempts !== undefined;
+  const base = hasAtt ? 'Tentatives restantes après celle-ci : ' + ATTEMPT.remainingAttempts : '';
   if (!ATTEMPT || !ATTEMPT.deadline) {
-    meta.style.display = base ? 'block' : 'none';
-    meta.textContent = base;
+    if (base) { meta.style.display = 'inline-flex'; meta.textContent = base; } else meta.style.display = 'none';
     return;
   }
   const tick = () => {
     const left = Math.max(0, ATTEMPT.deadline - Date.now());
     const sec = Math.ceil(left / 1000);
-    meta.style.display = 'block';
-    if (!left) {
-      clearInterval(ATTEMPT_TIMER);
-      btn.disabled = true;
-      meta.textContent = 'Temps écoulé — envoi impossible.';
-      return;
-    }
-    meta.textContent = (base ? base + ' · ' : '') + 'Temps restant : ' + Math.floor(sec / 60) + ' min ' + String(sec % 60).padStart(2, '0') + ' s';
+    meta.style.display = 'inline-flex';
+    if (!left) { clearInterval(ATTEMPT_TIMER); btn.disabled = true; $('btnNext').disabled = true; meta.textContent = 'Temps écoulé — envoi impossible.'; return; }
+    meta.textContent = (base ? base + ' · ' : '') + 'Temps restant : ' + Math.floor(sec/60) + ' min ' + String(sec%60).padStart(2,'0') + ' s';
   };
-  tick();
-  ATTEMPT_TIMER = setInterval(tick, 1000);
+  tick(); ATTEMPT_TIMER = setInterval(tick, 1000);
 }
 
-/* ---------- Rendu ---------- */
+function showError(msg) {
+  $('stateLoading').style.display = 'none';
+  $('stateError').style.display = 'block';
+  $('errorMsg').textContent = msg;
+}
+
+/* ── Rendu ─────────────────────────────────────────────── */
 function renderForm() {
-  show('stateLoading', false); show('stateError', false); show('stateSuccess', false); show('stateForm', true);
+  $('stateLoading').style.display = 'none';
+  $('stateSuccess').style.display = 'none';
+  $('stateForm').style.display = 'block';
   const vars = QUESTIONNAIRE.variables || [];
-  const rawTitle = String(QUESTIONNAIRE.title || '').trim();
-  const title = (!rawTitle || rawTitle === 'Questionnaire sans titre') ? 'Questionnaire' : rawTitle;
-  $('formTitle').textContent = title;
-  document.title = title + ' — StatAnalyse Pro';
-  const obligCount = vars.filter(v => v.required !== false).length;
-  $('formSubtitle').textContent = `${vars.length} question(s) — ${obligCount} obligatoire(s)`;
+  const t = (QUESTIONNAIRE.title || '').trim();
+  $('formTitle').textContent = (!t || /^questionnaire sans titre$/i.test(t)) ? 'Questionnaire' : t;
+  const oblig = vars.filter(v => v.required !== false).length;
+  const mins = Math.max(1, Math.round(vars.length * 0.4));
+  $('formSubtitle').textContent = `${vars.length} question(s) · ${oblig} obligatoire(s) · environ ${mins} min`;
+  PAGE_SIZE = vars.length <= 12 ? Math.max(1, vars.length) : 8;
   $('formFields').innerHTML = vars.map((v, i) => buildField(v, i)).join('');
-  $('formError').style.display = 'none';
-  const btn = $('btnSubmit'); btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
-  SUBMITTING = false;
-  restoreDraft();
-  updateProgress();
+  $('progRow').style.display = vars.length ? 'flex' : 'none';
+  const root = $('formFields');
+  root.querySelectorAll('input,select,textarea').forEach(el => {
+    el.addEventListener('change', onAnswer);
+    el.addEventListener('input', onAnswer);
+  });
+  const restored = loadDraft();
+  showPage(restored ? Math.min(restored.page || 0, pageCount() - 1) : 0, true);
+  onAnswer();
 }
 
 function buildField(v, i) {
-  const t = normType(v);
   const req = v.required !== false;
-  const reqHtml = req ? `<span class="req">*</span>` : `<span class="opt-tag">optionnel</span>`;
-  const labelHtml = `<div class="q-label"><span class="q-num">${i + 1}</span><span>${esc(v.name)}${reqHtml}</span></div>`;
-  const opts = Array.isArray(v.options) ? v.options : [];
+  const reqHtml = req ? `<span class="req" title="Obligatoire">*</span>` : `<span class="opt-tag">optionnel</span>`;
+  const labelHtml = `<div class="q-label"><span class="q-num">${i+1}</span><span>${esc(v.name)}${reqHtml}</span></div>`;
+  const opts = v.options || [];
   let inputHtml = '';
-  if (t === 'list') {
-    inputHtml = `<select id="field_${i}" data-i="${i}"><option value="">— Sélectionner —</option>${opts.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>`;
-  } else if (t === 'radio') {
-    inputHtml = `<div class="options-list" id="field_${i}">${opts.map((o, oi) => `<label class="opt-item"><input type="radio" name="radio_${i}" value="${esc(o)}" data-i="${i}"><span>${esc(o)}</span></label>`).join('')}</div>`;
-  } else if (t === 'checkbox') {
-    inputHtml = `<div class="options-list" id="field_${i}">${opts.map((o, oi) => `<label class="opt-item"><input type="checkbox" value="${esc(o)}" data-i="${i}"><span>${esc(o)}</span></label>`).join('')}</div>`;
-  } else if (t === 'scale') {
-    inputHtml = `<div><div class="scale-row" id="field_${i}">${[1,2,3,4,5].map(n => `<button type="button" class="scale-btn" data-scale="${n}" data-i="${i}">${n}</button>`).join('')}</div><div class="scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div></div>`;
-  } else if (t === 'number') {
-    inputHtml = `<input type="number" id="field_${i}" data-i="${i}" inputmode="decimal" step="any" placeholder="Entrez un nombre">`;
-  } else if (t === 'date') {
-    inputHtml = `<input type="date" id="field_${i}" data-i="${i}">`;
-  } else if (t === 'textarea') {
-    inputHtml = `<textarea id="field_${i}" data-i="${i}" rows="3" placeholder="Votre réponse…"></textarea>`;
+  if (v.type === 'list') {
+    inputHtml = `<select id="field_${i}" aria-label="${esc(v.name)}"><option value="">— Sélectionner —</option>${opts.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>`;
+  } else if (v.type === 'radio') {
+    inputHtml = `<div class="options-list" id="field_${i}" role="radiogroup">${opts.map((o,oi)=>`<div class="opt-item" onclick="selectRadio(${i},${oi},event)"><input type="radio" name="radio_${i}" id="radio_${i}_${oi}" value="${esc(o)}"><label for="radio_${i}_${oi}" onclick="event.preventDefault()">${esc(o)}</label></div>`).join('')}</div>`;
+  } else if (v.type === 'checkbox') {
+    inputHtml = `<div class="options-list" id="field_${i}">${opts.map((o,oi)=>`<div class="opt-item" onclick="toggleCheck(this,event)"><input type="checkbox" id="check_${i}_${oi}" value="${esc(o)}"><label for="check_${i}_${oi}" onclick="event.preventDefault()">${esc(o)}</label></div>`).join('')}</div>`;
+  } else if (v.type === 'scale') {
+    inputHtml = `<div><div class="scale-row" id="field_${i}">${[1,2,3,4,5].map(n=>`<div class="scale-btn" role="button" tabindex="0" onclick="selectScale(${i},${n})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectScale(${i},${n})}" data-val="${n}">${n}</div>`).join('')}</div><div class="scale-labels"><span>Pas du tout</span><span>Tout à fait</span></div></div>`;
+  } else if (v.type === 'number') {
+    inputHtml = `<input type="number" inputmode="decimal" id="field_${i}" placeholder="Entrez un nombre" aria-label="${esc(v.name)}">`;
+  } else if (v.type === 'date') {
+    inputHtml = `<input type="date" id="field_${i}" aria-label="${esc(v.name)}">`;
   } else {
-    inputHtml = `<input type="text" id="field_${i}" data-i="${i}" autocomplete="off" placeholder="Votre réponse…">`;
+    inputHtml = `<input type="text" id="field_${i}" placeholder="Votre réponse…" autocomplete="off" aria-label="${esc(v.name)}">`;
   }
-  return `<div class="q-card" id="qcard_${i}" data-type="${t}">${labelHtml}${inputHtml}<div class="q-err">Cette question est obligatoire.</div></div>`;
+  return `<div class="q-card" id="qcard_${i}" data-i="${i}">${labelHtml}${inputHtml}<div class="q-err">Cette question est obligatoire.</div></div>`;
 }
 
-/* Délégation d'événements : un seul jeu d'écouteurs, aucun onclick par option */
-document.addEventListener('change', e => {
-  const el = e.target;
-  if (!el.closest || !el.closest('#formFields')) return;
-  if (el.type === 'radio' || el.type === 'checkbox') {
-    const item = el.closest('.opt-item');
-    if (el.type === 'radio') {
-      el.closest('.options-list').querySelectorAll('.opt-item').forEach(x => x.classList.remove('selected'));
-    }
-    if (item) item.classList.toggle('selected', el.checked);
-  }
-  onFieldChanged(el);
-});
-document.addEventListener('input', e => {
-  const el = e.target;
-  if (el.closest && el.closest('#formFields') && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) onFieldChanged(el);
-});
-document.addEventListener('click', e => {
-  const b = e.target.closest && e.target.closest('.scale-btn');
-  if (!b) return;
-  const row = b.parentElement;
-  row.querySelectorAll('.scale-btn').forEach(x => x.classList.toggle('selected', x === b));
-  row.dataset.val = b.dataset.scale;
-  onFieldChanged(b);
-});
-
-function onFieldChanged(el) {
-  const card = el.closest && el.closest('.q-card');
-  if (card) card.classList.remove('has-error');
-  updateProgress();
-  scheduleDraftSave();
+function selectRadio(fieldIdx, optIdx, ev) {
+  const container = $('field_'+fieldIdx);
+  container.querySelectorAll('.opt-item').forEach(el => el.classList.remove('selected'));
+  const item = container.querySelectorAll('.opt-item')[optIdx];
+  item.classList.add('selected');
+  item.querySelector('input').checked = true;
+  onAnswer();
+}
+function toggleCheck(item, ev) {
+  const cb = item.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('selected', cb.checked);
+  onAnswer();
+}
+function selectScale(fieldIdx, val) {
+  const container = $('field_'+fieldIdx);
+  container.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === val));
+  container.dataset.val = val;
+  onAnswer();
 }
 
-function getFieldValue(v, i) {
-  const t = normType(v);
-  if (t === 'radio') { const c = document.querySelector(`input[name="radio_${i}"]:checked`); return c ? c.value : ''; }
-  if (t === 'checkbox') { const vals = [...document.querySelectorAll(`#field_${i} input[type=checkbox]:checked`)].map(c => c.value); return vals.length ? vals.join(', ') : ''; }
-  if (t === 'scale') { const el = $('field_' + i); return (el && el.dataset.val) || ''; }
-  const el = $('field_' + i);
+/* ── Valeurs ───────────────────────────────────────────── */
+function getRaw(v, i) {
+  if (v.type === 'radio') { const c = document.querySelector(`input[name="radio_${i}"]:checked`); return c ? c.value : ''; }
+  if (v.type === 'checkbox') return [...document.querySelectorAll(`#field_${i} input[type=checkbox]:checked`)].map(c => c.value);
+  if (v.type === 'scale') return ($('field_'+i) && $('field_'+i).dataset.val) || '';
+  const el = $('field_'+i);
   return el ? el.value.trim() : '';
 }
+function getFieldValue(v, i) {
+  const r = getRaw(v, i);
+  return Array.isArray(r) ? (r.length ? r.join(', ') : '') : r;
+}
+function setRaw(v, i, val) {
+  if (v.type === 'radio') {
+    const inputs = [...document.querySelectorAll(`input[name="radio_${i}"]`)];
+    inputs.forEach((inp, oi) => { const on = inp.value === val; inp.checked = on; inp.closest('.opt-item').classList.toggle('selected', on); });
+  } else if (v.type === 'checkbox') {
+    const arr = Array.isArray(val) ? val : [];
+    document.querySelectorAll(`#field_${i} input[type=checkbox]`).forEach(inp => { const on = arr.includes(inp.value); inp.checked = on; inp.closest('.opt-item').classList.toggle('selected', on); });
+  } else if (v.type === 'scale') {
+    if (val) selectScaleSilent(i, parseInt(val));
+  } else {
+    const el = $('field_'+i); if (el) el.value = val || '';
+  }
+}
+function selectScaleSilent(i, val) {
+  const c = $('field_'+i); if (!c) return;
+  c.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === val));
+  c.dataset.val = val;
+}
 
-function updateProgress() {
-  const vars = (QUESTIONNAIRE && QUESTIONNAIRE.variables) || [];
+/* ── Progression + brouillon ───────────────────────────── */
+function onAnswer() {
+  const vars = QUESTIONNAIRE?.variables || [];
   let filled = 0;
-  vars.forEach((v, i) => { if (getFieldValue(v, i)) filled++; });
+  vars.forEach((v, i) => {
+    const has = !!getFieldValue(v, i);
+    if (has) filled++;
+    const card = $('qcard_'+i);
+    if (card) { card.classList.toggle('done', has); if (has) card.classList.remove('has-error'); }
+  });
   const pct = vars.length ? Math.round(filled / vars.length * 100) : 0;
   $('progressFill').style.width = pct + '%';
-  $('progressTxt').textContent = filled + ' / ' + vars.length + ' question(s)';
-  $('progressPct').textContent = pct + ' %';
+  $('progText').textContent = filled + ' / ' + vars.length;
+  clearTimeout(SAVE_T); SAVE_T = setTimeout(saveDraft, 500);
 }
-
-/* ---------- Brouillon local (survit à un rechargement / coupure réseau) ---------- */
-function draftKey() { return 'sa_draft_' + (QUESTIONNAIRE && QUESTIONNAIRE.qid || ''); }
-function draftSignature() { return (QUESTIONNAIRE.variables || []).map(v => v.name).join('|').length + ':' + (QUESTIONNAIRE.variables || []).length; }
-function scheduleDraftSave() {
-  clearTimeout(DRAFT_TIMER);
-  DRAFT_TIMER = setTimeout(saveDraft, 400);
-}
+function draftKey() { return 'noria_draft_' + (QUESTIONNAIRE && QUESTIONNAIRE.qid); }
+function varsSig() { return (QUESTIONNAIRE.variables || []).map(v => v.name + ':' + v.type).join('|').length + ':' + (QUESTIONNAIRE.variables || []).length; }
 function saveDraft() {
   try {
-    const vars = QUESTIONNAIRE.variables || [];
-    const vals = vars.map((v, i) => getFieldValue(v, i));
-    if (!vals.some(Boolean)) { localStorage.removeItem(draftKey()); return; }
-    localStorage.setItem(draftKey(), JSON.stringify({ sig: draftSignature(), vals, t: Date.now() }));
-  } catch (e) { /* stockage indisponible : on ignore */ }
+    const vals = {}; let any = false;
+    (QUESTIONNAIRE.variables || []).forEach((v, i) => { const r = getRaw(v, i); const has = Array.isArray(r) ? r.length : !!r; if (has) { vals[i] = r; any = true; } });
+    if (!any) { localStorage.removeItem(draftKey()); return; }
+    localStorage.setItem(draftKey(), JSON.stringify({ sig: varsSig(), page: PAGE, vals, ts: Date.now() }));
+  } catch (e) {}
 }
-function clearDraft() { try { localStorage.removeItem(draftKey()); } catch (e) {} }
-function restoreDraft() {
+function loadDraft() {
   try {
-    const raw = localStorage.getItem(draftKey());
-    if (!raw) return;
+    const raw = localStorage.getItem(draftKey()); if (!raw) return null;
     const d = JSON.parse(raw);
-    if (!d || d.sig !== draftSignature() || !Array.isArray(d.vals)) return;
-    if (Date.now() - (d.t || 0) > 7 * 24 * 3600 * 1000) { clearDraft(); return; }
-    const vars = QUESTIONNAIRE.variables || [];
-    vars.forEach((v, i) => {
-      const val = d.vals[i];
-      if (!val) return;
-      const t = normType(v);
-      if (t === 'radio') {
-        const r = [...document.querySelectorAll(`input[name="radio_${i}"]`)].find(x => x.value === val);
-        if (r) { r.checked = true; r.closest('.opt-item').classList.add('selected'); }
-      } else if (t === 'checkbox') {
-        const set = new Set(String(val).split(', '));
-        document.querySelectorAll(`#field_${i} input[type=checkbox]`).forEach(c => { if (set.has(c.value)) { c.checked = true; c.closest('.opt-item').classList.add('selected'); } });
-      } else if (t === 'scale') {
-        const row = $('field_' + i);
-        if (row) { row.dataset.val = val; row.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', b.dataset.scale === String(val))); }
-      } else {
-        const el = $('field_' + i); if (el) el.value = val;
-      }
-    });
-    $('draftNote').textContent = '💾 Vos réponses précédentes ont été restaurées.';
-  } catch (e) { /* brouillon illisible : ignoré */ }
+    if (!d || d.sig !== varsSig() || Date.now() - d.ts > 14 * 864e5) { localStorage.removeItem(draftKey()); return null; }
+    (QUESTIONNAIRE.variables || []).forEach((v, i) => { if (d.vals[i] !== undefined) setRaw(v, i, d.vals[i]); });
+    $('draftBanner').style.display = 'flex';
+    return d;
+  } catch (e) { return null; }
+}
+function clearDraft(reset) {
+  try { localStorage.removeItem(draftKey()); } catch (e) {}
+  $('draftBanner').style.display = 'none';
+  if (reset) { renderForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 }
 
-/* ---------- Envoi (idempotent côté serveur : on peut réessayer sans doublon) ---------- */
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-async function sendWithRetry(payload) {
-  let lastErr;
-  for (let k = 0; k < 3; k++) {
-    try { return await callSecureFunction('submitAttempt', payload); }
-    catch (e) {
-      lastErr = e;
-      const definitive = e.status && e.status < 500 && e.status !== 429;
-      if (definitive) throw e;
-      await sleep(1200 * (k + 1));
-    }
-  }
-  throw lastErr;
+/* ── Pagination ────────────────────────────────────────── */
+function pageCount() { return Math.max(1, Math.ceil((QUESTIONNAIRE.variables || []).length / PAGE_SIZE)); }
+function showPage(p, silent) {
+  PAGE = Math.max(0, Math.min(p, pageCount() - 1));
+  document.querySelectorAll('.q-card').forEach(c => { c.hidden = Math.floor(parseInt(c.dataset.i) / PAGE_SIZE) !== PAGE; });
+  const last = PAGE === pageCount() - 1;
+  $('btnPrev').hidden = PAGE === 0;
+  $('btnNext').hidden = last;
+  $('btnSubmit').hidden = !last;
+  $('pageInd').textContent = pageCount() > 1 ? 'Page ' + (PAGE + 1) + ' sur ' + pageCount() : '';
+  $('formError').style.display = 'none';
+  if (!silent) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+function firstEmptyRequired(from, to) {
+  const vars = QUESTIONNAIRE.variables || [];
+  for (let i = from; i < Math.min(to, vars.length); i++) if (vars[i].required !== false && !getFieldValue(vars[i], i)) return i;
+  return -1;
+}
+function flagError(i) {
+  const card = $('qcard_'+i); if (!card) return;
+  showPage(Math.floor(i / PAGE_SIZE), true);
+  card.classList.add('has-error');
+  const e = $('formError'); e.style.display = 'block';
+  e.textContent = '⚠️ Veuillez répondre aux questions obligatoires (marquées *).';
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function goNext() {
+  const bad = firstEmptyRequired(PAGE * PAGE_SIZE, (PAGE + 1) * PAGE_SIZE);
+  if (bad !== -1) return flagError(bad);
+  saveDraft(); showPage(PAGE + 1);
+}
+function goPrev() { showPage(PAGE - 1); }
 
+/* ── Envoi ─────────────────────────────────────────────── */
 async function submitResponse() {
-  if (SUBMITTING) return;
   const vars = QUESTIONNAIRE.variables || [];
   const data = {};
-  const missing = [];
-  vars.forEach((v, i) => {
-    const val = getFieldValue(v, i);
-    data[v.name] = val;
-    if (v.required !== false && !val) missing.push(i);
-  });
-  const errEl = $('formError');
-  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('has-error'));
-  if (missing.length) {
-    missing.forEach(i => $('qcard_' + i).classList.add('has-error'));
-    errEl.style.display = 'block';
-    errEl.textContent = `⚠️ ${missing.length} question(s) obligatoire(s) sans réponse (marquées en rouge).`;
-    $('qcard_' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
-    return;
-  }
-  errEl.style.display = 'none';
+  vars.forEach((v, i) => { data[v.name] = getFieldValue(v, i); });
+  const bad = firstEmptyRequired(0, vars.length);
+  if (bad !== -1) return flagError(bad);
+  const errEl = $('formError'); errEl.style.display = 'none';
   const btn = $('btnSubmit');
-  SUBMITTING = true; btn.disabled = true; btn.textContent = '⏳ Envoi en cours...';
+  btn.disabled = true; btn.textContent = '⏳ Envoi en cours…';
   try {
-    if (!ATTEMPT || !ATTEMPT.attemptId) throw new HttpError('Tentative non initialisée. Rechargez la page.', 400);
-    const res = await sendWithRetry({ qid: QUESTIONNAIRE.qid, attemptId: ATTEMPT.attemptId, data });
+    if (!ATTEMPT?.attemptId) throw new Error('Tentative non initialisée');
+    await callSecureFunction('submitAttempt', { qid: QUESTIONNAIRE.qid, attemptId: ATTEMPT.attemptId, data });
     clearInterval(ATTEMPT_TIMER);
-    clearDraft();
-    showSuccess(res);
+    try { localStorage.removeItem(draftKey()); } catch (e) {}
+    $('recapList').innerHTML = vars.map((v, i) => `<div class="recap-item"><div class="recap-q">${i+1}. ${esc(v.name)}</div><div class="recap-a">${esc(data[v.name] || '—')}</div></div>`).join('');
+    $('stateForm').style.display = 'none';
+    $('progRow').style.display = 'none';
+    $('stateSuccess').style.display = 'block';
+    window.scrollTo({ top: 0 });
   } catch(e) {
     errEl.style.display = 'block';
-    errEl.textContent = '❌ Envoi impossible : ' + (e.message || 'erreur réseau') + (e.status && e.status < 500 ? '' : ' — vos réponses sont conservées, réessayez.');
-    SUBMITTING = false; btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
+    errEl.textContent = '❌ Erreur d’envoi : ' + e.message + ' — vos réponses sont conservées, réessayez.';
+    btn.disabled = false; btn.textContent = '✅ Envoyer mes réponses';
   }
 }
 
-function showSuccess(res) {
-  show('stateForm', false); show('stateSuccess', true);
-  $('againError').style.display = 'none';
-  const rc = $('receipt');
-  const id = res && res.responseId ? String(res.responseId).slice(-8).toUpperCase() : '';
-  const when = new Date(res && res.createdAt ? res.createdAt : Date.now());
-  rc.innerHTML = (id ? `Référence : <b>${esc(id)}</b> · ` : '') + esc(when.toLocaleString('fr-FR', { dateStyle:'short', timeStyle:'short' }));
-  rc.style.display = 'inline-block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* « Remplir à nouveau » : nouvelle tentative serveur (l'ancienne est consommée) */
 async function repondreEncore() {
-  const btn = $('btnAgain'), err = $('againError');
-  btn.disabled = true; btn.textContent = '⏳ Préparation...'; err.style.display = 'none';
+  const b = $('btnAgain'); b.disabled = true; b.textContent = '⏳ Préparation…';
   try {
     ATTEMPT = await callSecureFunction('startAttempt', { qid: QUESTIONNAIRE.qid });
-    renderForm();
-    startAttemptTimer();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderForm(); startAttemptTimer();
+    $('btnSubmit').disabled = false; $('btnSubmit').textContent = '✅ Envoyer mes réponses';
+    window.scrollTo({ top: 0 });
   } catch (e) {
-    err.style.display = 'block';
-    err.textContent = e.message || 'Impossible de démarrer une nouvelle réponse.';
-  } finally {
-    btn.disabled = false; btn.textContent = 'Remplir à nouveau';
+    b.disabled = false; b.textContent = 'Remplir à nouveau';
+    alert('Impossible de recommencer : ' + e.message);
   }
 }
 

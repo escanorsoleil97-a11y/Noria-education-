@@ -2,6 +2,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Admins : UID historiques (inchangés) + custom claim optionnel `admin: true`
+    // (ajout non régressif : permet de retirer les UID en dur plus tard).
+    function isAdmin() {
+      return request.auth != null
+        && (request.auth.uid in [
+              '0f9FMESHK6gq5Gl77tquCETbFow1',
+              'SBATLA0GmVbeYWWpWrPoRTTveb32'
+            ]
+            || request.auth.token.get('admin', false) == true);
+    }
+
     // --- Profil utilisateur ---
     // On sépare : l'utilisateur peut créer/lire son profil, mais ne peut PAS
     // modifier les champs sensibles (credits, plan, plan_expired...) qui ne
@@ -10,8 +21,18 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
 
+      // Création : le profil initial ne peut PAS s'attribuer un plan payant, des
+      // crédits supérieurs au crédit gratuit (10) ni des gains de parrainage.
       allow create: if request.auth != null
-        && request.auth.uid == userId;
+        && request.auth.uid == userId
+        && request.resource.data.get('plan', 'gratuit') == 'gratuit'
+        && request.resource.data.get('credits', 0) <= 10
+        && request.resource.data.get('referralEarnings', 0) == 0
+        && request.resource.data.get('referralCount', 0) == 0
+        && !request.resource.data.keys().hasAny(['role', 'admin', 'planExpiry',
+             'institutionNbComptes', 'referralBonusGiven', 'usageLog',
+             'questClaims', 'weekActionLog', 'suspended', 'fraudExcluded',
+             'gobeletWins']);
 
       allow update: if request.auth != null
         && request.auth.uid == userId
@@ -94,20 +115,12 @@ service cloud.firestore {
       // qui contourne ces règles) peut lire cette collection — l'action
       // "list" filtre le champ "answer" avant renvoi au navigateur.
       allow read: if false;
-      allow write: if request.auth != null
-        && request.auth.uid in [
-          '0f9FMESHK6gq5Gl77tquCETbFow1',
-          'SBATLA0GmVbeYWWpWrPoRTTveb32'
-        ];
+      allow write: if isAdmin();
     }
 
     match /epreuvesPDF/{id} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null
-        && request.auth.uid in [
-          '0f9FMESHK6gq5Gl77tquCETbFow1',
-          'SBATLA0GmVbeYWWpWrPoRTTveb32'
-        ];
+      allow write: if isAdmin();
     }
 
     // --- Résultats étudiants ---
@@ -128,15 +141,12 @@ service cloud.firestore {
       allow read: if request.auth != null
         && resource.data.uid == request.auth.uid;
       allow create: if request.auth != null
-        && request.resource.data.uid == request.auth.uid;
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.size() <= 50;
     }
 
     match /etablissements/{id} {
-      allow read, write: if request.auth != null
-        && request.auth.uid in [
-          '0f9FMESHK6gq5Gl77tquCETbFow1',
-          'SBATLA0GmVbeYWWpWrPoRTTveb32'
-        ];
+      allow read, write: if isAdmin();
     }
 
     // --- Module Ambassadeurs ---
@@ -185,7 +195,8 @@ service cloud.firestore {
     }
 
     match /_spi_logs/{id} {
-      allow create: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.size() <= 50;
       allow read, update, delete: if false;
     }
 

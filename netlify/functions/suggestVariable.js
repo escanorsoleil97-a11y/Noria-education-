@@ -7,6 +7,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 
 const admin = require('firebase-admin');
+const _secRL = require('./_security');
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
@@ -47,6 +48,9 @@ const _origin = (event.headers && (event.headers.origin || event.headers.Origin)
     uid = (await admin.auth().verifyIdToken(authHeader.split('Bearer ')[1])).uid;
   } catch (e) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Token invalide ou expiré' }) };
+  }
+  if (!(await _secRL.rateLimitDurable('ai:' + uid, { limit: 40, windowMs: 60000 }))) {
+    return { statusCode: 429, headers, body: JSON.stringify({ error: 'Trop de requêtes, réessayez dans une minute.' }) };
   }
 
   // Cette fonctionnalité est gratuite et ne débite pas de chimis : elle ne doit

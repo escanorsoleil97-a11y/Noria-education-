@@ -1,12 +1,21 @@
 const admin = require('firebase-admin');
 if (!admin.apps.length) admin.initializeApp({ credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)) });
 const db = admin.firestore();
-const HEADERS = { 'Access-Control-Allow-Origin': (process.env.URL || process.env.DEPLOY_URL || 'https://stat-analyse-pro.netlify.app','https://pstat-pro-all.netlify.app').replace(/\/$/, ''), 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'Content-Type': 'application/json' };
+const _sec = require('./_security');
+const HEADERS = { 'Access-Control-Allow-Origin': 'https://pstat-pro-all.netlify.app', 'Vary': 'Origin', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'Content-Type': 'application/json' };
 
-function out(statusCode, body) { return { statusCode, headers: HEADERS, body: JSON.stringify(body) }; }
+// Origine reflétée uniquement si elle figure dans la liste fermée (_security) ;
+// sinon valeur historique inchangée.
+function _hdr(event) {
+  const o = (event && event.headers && (event.headers.origin || event.headers.Origin)) || '';
+  return (o && _sec.allowedOrigins().includes(o)) ? { ...HEADERS, 'Access-Control-Allow-Origin': o } : HEADERS;
+}
+let _curEvent = null;
+function out(statusCode, body) { return { statusCode, headers: _hdr(_curEvent), body: JSON.stringify(body) }; }
 
 exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: HEADERS, body: '' };
+  _curEvent = event;
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: _hdr(event), body: '' };
   if (event.httpMethod !== 'GET') return out(405, { error: 'Méthode non autorisée' });
   try {
     const id = String(event.queryStringParameters?.campagne || '').trim();

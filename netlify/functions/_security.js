@@ -114,6 +114,29 @@ function rateLimit(ip, {limit=40, windowMs=60000}={}){
   }
   return true;
 }
+/**
+ * Rate-limit DURABLE (Firestore, fenêtre fixe) — par clé (ex: 'ai:'+uid).
+ * Contrairement à rateLimit() (mémoire d'une instance), il tient entre les
+ * instances et les démarrages à froid. Échec ouvert : une panne Firestore ne
+ * bloque jamais un utilisateur légitime. Activez un TTL Firestore sur le champ
+ * `expireAt` de la collection `_rate` pour le nettoyage automatique.
+ */
+async function rateLimitDurable(key,{limit=30,windowMs=60000}={}){
+  try{
+    if(!admin.apps.length) return true;
+    const db=admin.firestore();
+    const bucket=Math.floor(Date.now()/windowMs);
+    const id=String(key).replace(/[^A-Za-z0-9_-]/g,'_').slice(0,120)+'_'+bucket;
+    const ref=db.collection('_rate').doc(id);
+    return await db.runTransaction(async tx=>{
+      const snap=await tx.get(ref);
+      const n=snap.exists?(snap.data().n||0):0;
+      if(n>=limit) return false;
+      tx.set(ref,{n:n+1,expireAt:admin.firestore.Timestamp.fromMillis(Date.now()+windowMs*3)});
+      return true;
+    });
+  }catch(e){console.error('rateLimitDurable:',e.message);return true;}
+}
 function clientIp(event){
   const xf=event.headers?.['x-forwarded-for']||event.headers?.['X-Forwarded-For']||'';
   return String(xf).split(',')[0].trim() || event.headers?.['client-ip'] || 'unknown';
@@ -128,5 +151,5 @@ function adminUids(){
 }
 module.exports={
   allowedOrigins,originOf,assertOrigin,securityHeaders,body,
-  verifyAppCheck,verifyAuth,preflight,rateLimit,clientIp,adminUids
+  verifyAppCheck,verifyAuth,preflight,rateLimit,rateLimitDurable,clientIp,adminUids
 };

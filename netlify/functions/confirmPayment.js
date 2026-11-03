@@ -55,6 +55,7 @@ async function verifyNotchPay(txRef) {
   return {
     paid: data?.transaction?.status === 'complete',
     amount: data?.transaction?.amount ?? null,
+    currency: data?.transaction?.currency ?? null,
   };
 }
 
@@ -70,6 +71,7 @@ async function verifyMonetbil(txRef) {
   return {
     paid: data?.status === 1,
     amount: data?.amount ?? null,
+    currency: data?.currency ?? null,
   };
 }
 
@@ -83,6 +85,14 @@ async function triggerReferralBonus(uid, plan) {
 
   const data = userSnap.data();
   if (!data.referredBy || data.referralBonusGiven) return; // déjà accordé
+
+  // Anti-fraude parrainage : le parrain déclaré doit exister, ne pas être le
+  // filleul lui-même, et son code de parrainage doit correspondre.
+  if (data.referredByUid) {
+    if (data.referredByUid === uid) return;
+    const parrainSnap = await db.collection('users').doc(data.referredByUid).get();
+    if (!parrainSnap.exists || parrainSnap.data().referralCode !== data.referredBy) return;
+  }
 
   // Créditer le filleul
   await userRef.update({
@@ -122,6 +132,8 @@ exports.handler = async (event) => {
     }
   } catch (_rl) {}
 
+  let reservedRef = null;
+  let completed = false;
   try {
     // 1. Vérifier token Firebase Auth
     const authHeader = event.headers.authorization || '';
@@ -129,7 +141,7 @@ exports.handler = async (event) => {
       return { statusCode: 401, headers, body: JSON.stringify({ error: 'Token manquant' }) };
     }
     const idToken = authHeader.split('Bearer ')[1];
-    const decoded = await admin.auth().verifyIdToken(idToken);
+    const decoded = await admin.auth().verifyIdToken(idToken, true);
     const uid = decoded.uid;
 
     // 2. Lire les paramètres
@@ -172,6 +184,10 @@ exports.handler = async (event) => {
       return { statusCode: 402, headers, body: JSON.stringify({ error: 'Paiement non confirmé' }) };
     }
 
+    if (verif.currency && !['XAF', 'FCFA', 'XOF'].includes(String(verif.currency).toUpperCase())) {
+      return { statusCode: 402, headers, body: JSON.stringify({ error: 'Devise de paiement invalide' }) };
+    }
+
     // 4bis. Vérifier strictement que le montant payé correspond au prix du plan
     // demandé (anti-fraude) — pour TOUS les plans, pas seulement Institution.
     // Si l'agrégateur ne renvoie pas de montant vérifiable → on BLOQUE :
@@ -207,6 +223,20 @@ exports.handler = async (event) => {
       return { statusCode: 402, headers, body: JSON.stringify({ error: `Montant payé (${verif.amount}) insuffisant pour le plan ${plan} (attendu ${prixAttendu} FCFA)` }) };
     }
 
+    // 4ter. Réservation ATOMIQUE de la transaction (create() échoue si le document
+    // existe déjà) : deux requêtes simultanées ne peuvent plus créditer deux fois.
+    try {
+      reservedRef = db.collection('transactions').doc(txRef);
+      await reservedRef.create({ uid, plan, provider, status: 'processing', reservedAt: new Date().toISOString() });
+    } catch (re) {
+      if (re && (re.code === 6 || /ALREADY_EXISTS/i.test(String(re.message)))) {
+        reservedRef = null;
+        return { statusCode: 200, headers, body: JSON.stringify({ ok: true, alreadyProcessed: true }) };
+      }
+      reservedRef = null;
+      throw re;
+    }
+
     // 5. Mettre à jour le plan utilisateur
     const config = PLAN_CONFIG[plan];
     const creditsToAdd = plan === 'institution' ? institutionCredits : config.credits;
@@ -227,13 +257,15 @@ exports.handler = async (event) => {
 
     // 6. Marquer la transaction comme traitée
     await db.collection('transactions').doc(txRef).set({
-      uid, plan, provider,
+      uid, plan, provider, status: 'done',
       ...(plan === 'institution' ? { nbComptes: parseInt(nbComptes, 10), montantVerifie: verif.amount } : {}),
       processedAt: new Date().toISOString(),
     });
 
-    // 7. Déclencher le bonus parrain
-    await triggerReferralBonus(uid, plan);
+    completed = true;
+
+    // 7. Déclencher le bonus parrain (non bloquant : le paiement est déjà acté)
+    try { await triggerReferralBonus(uid, plan); } catch (refErr) { console.error('triggerReferralBonus:', refErr); }
 
     return {
       statusCode: 200,
@@ -243,6 +275,8 @@ exports.handler = async (event) => {
 
   } catch (e) {
     console.error('confirmPayment error:', e);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: e.message }) };
+    // Échec avant crédit : libérer la réservation pour permettre une nouvelle tentative.
+    if (reservedRef && !completed) { try { await reservedRef.delete(); } catch (_d) {} }
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Erreur serveur lors de la confirmation du paiement.' }) };
   }
 };
